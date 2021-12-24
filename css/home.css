@@ -7,6 +7,7 @@ html, body {
     padding: 0;
     font-size: 16px;
     font-family: "proxima";
+    user-select: none;
 }
 
 @font-face {
@@ -20,6 +21,7 @@ html, body {
     --c-background: #1F1F1F;
     --a-accent: #1FA6FA;
     --b-accent: rgb(200,20,20);
+    --a-select: #484D6D;
 }
 
 .smooth-shadow {
@@ -197,8 +199,10 @@ html, body {
     background: var(--a-background);
     border-radius: 0.5rem;
     position: relative;
-    transition: transform 200ms cubic-bezier(0.75, 0.09, 0.18, 1.99), box-shadow 150ms ease-in-out;
+    transition: transform 200ms cubic-bezier(0.75, 0.09, 0.18, 1.99), box-shadow 200ms cubic-bezier(0.75, 0.09, 0.18, 1.99);
     cursor: pointer;
+    color: white;
+    overflow: hidden;
 }
 
 .explorer-wrapper > .browser.frontpage > .scroller > .grid > .element:hover {
