@@ -4,7 +4,8 @@
   "description": "",
   "main": "boot.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/MindChirp/MatParse/issues"
   },
-  "homepage": "https://github.com/MindChirp/MatParse#readme"
+  "homepage": "https://github.com/MindChirp/MatParse#readme",
+  "devDependencies": {
+    "electron": "^16.0.5"
+  }
 }
