@@ -21,6 +21,7 @@
     "electron": "^16.0.5"
   },
   "dependencies": {
+    "adm-zip": "^0.5.9",
     "fs-extra": "^10.0.0"
   }
 }
