@@ -1,0 +1,16 @@
+{
+    "tag": "v0.0.1",
+    "version": "0.0.1",
+    "files": [
+        {
+            "url": "matparse-Setup-0.0.1.exe",
+            "sha512": "K6L/IRYt/SulVJ99pl44TTiuxrVPmG+J+LvcDMjo2susnYKLkEehqd0sqZSLcefsAMjsdS0KTJtUWqVD8P1kbw==",
+            "size": 60382922
+        }
+    ],
+    "path": "matparse-Setup-0.0.1.exe",
+    "sha512": "K6L/IRYt/SulVJ99pl44TTiuxrVPmG+J+LvcDMjo2susnYKLkEehqd0sqZSLcefsAMjsdS0KTJtUWqVD8P1kbw==",
+    "releaseDate": "2021-12-26T15:28:43.574Z",
+    "releaseName": "0.0.1",
+    "releaseNotes": "<p><strong>First release</strong></p>\n<p>Bare hyggelig</p>\n<p><strong>Full Changelog</strong>: <a href=\"https://github.com/MindChirp/MatParse/commits/v0.0.1\">https://github.com/MindChirp/MatParse/commits/v0.0.1</a></p>"
+}

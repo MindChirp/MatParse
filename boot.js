@@ -126,3 +126,23 @@ app.on("ready", ()=>{
 autoUpdater.on("update-available", (ev)=>{
     win.webContents.send("update-information", JSON.stringify(ev));
 })
+
+ipcMain.handle("download-update", async (ev)=>{
+    await autoUpdater.downloadUpdate();
+    return true
+})
+
+autoUpdater.on("download-progress", (ev)=>{
+    console.log(ev);
+    win.webContents.send("update-progress", JSON.parse(ev));
+})
+
+autoUpdater.on("update-downloaded", (ev)=>{
+    console.log(ev);
+    win.webContents.send("update-downloaded", JSON.parse(ev));
+})
+
+ipcMain.handle("restart-install", (ev)=>{
+    autoUpdater.quitAndInstall();
+    return true;
+})

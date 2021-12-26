@@ -37,6 +37,7 @@ html, body {
     width: 100%;
     background: var(--a-background);
     border-radius: 0.5rem;
+    overflow: hidden;
 }
 
 #program-wrapper > .title-bar {
@@ -400,7 +401,85 @@ body.small .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options
     padding: 0.5rem;
     box-sizing: border-box;
     border-radius: 0.5rem 0 0 0;
+    position: relative;
 }
+
+.explorer-wrapper > .browser.frontpage .browser-notification {
+    height: fit-content;
+    width: calc(100% - 2rem);
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translate(-50%);
+    background: var(--a-background);
+    border-radius: 0.5rem;
+    color: white;
+    padding: 0.5rem 1rem;
+    box-sizing: border-box;
+}
+.explorer-wrapper > .browser.frontpage .browser-notification span {
+    display: inline-block;
+}
+
+.explorer-wrapper > .browser.frontpage .browser-notification .close {
+    position: absolute;
+    right: 0.2rem;
+    top: 50%;
+    transform: translate(0,-50%);
+    height: 1.5rem;
+    width: 1.5rem;
+    background: transparent;
+    border-radius: 1rem;
+    outline: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.explorer-wrapper > .browser.frontpage .browser-notification .button-wrapper {
+    display: inline-block;
+    margin-left: 1rem;
+}
+
+.explorer-wrapper > .browser.frontpage .browser-notification .banner-action-button {
+    background: var(--a-accent);
+    border: none;
+    border-radius: 0.25rem;
+    display: inline-block;
+    cursor: pointer;
+    color: white;
+    font-family: "proxima";
+    text-transform: uppercase;
+    padding: 0.3rem 0.5rem;
+    transition: all 150ms ease-in-out;
+}
+
+.explorer-wrapper > .browser.frontpage .browser-notification .banner-action-button:hover {
+    transform: translate(0,-0.1rem);
+    box-shadow: 0 -1px 2px rgba(0,0,0,0.12), 
+    0 2px 2px rgba(0,0,0,0.12), 
+    0 4px 4px rgba(0,0,0,0.12), 
+    0 8px 8px rgba(0,0,0,0.12),
+    0 16px 16px rgba(0,0,0,0.12);
+}
+
+
+.explorer-wrapper > .browser.frontpage .browser-notification ver {
+    background:var(--c-background);
+    padding: 0.2rem 0.3rem;
+    border-radius: 0.25rem;
+    font-family: Consolas;
+    letter-spacing: -0.1em;
+}
+
+
+.explorer-wrapper > .browser.frontpage .browser-notification .close svg {
+    color: white;
+    height: 100%;
+    margin: auto;
+}
+
+
 
 .explorer-wrapper > .browser.frontpage > .fp-title {
     color: white;
@@ -642,4 +721,22 @@ body.small .explorer-wrapper > .browser.frontpage > .scroller > .grid > .element
 @keyframes file-drop-modal-pop-in {
     0%{opacity: 0;transform: translate(-50%,-50%) scale(0.5); top: 50%; left: 50%; border-radius: 50%;}
     100%{opacity: 1;transform: translate(-50%,-50%) scale(1); top: 50%; left: 50%;}
+}
+
+#download-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: transparent;
+    border-radius: 0 0 0.5rem 0.5rem;
+    overflow: hidden;
+}
+
+#download-progress .bar {
+    width: 0;
+    height: 3px;
+    background: var(--a-accent);
+    transition: all 100ms ease-in-out;
 }

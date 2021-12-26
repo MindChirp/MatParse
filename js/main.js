@@ -3,7 +3,7 @@ const { ipcRenderer, electron } = require("electron");
 const { setupProgram } = require("../js/setup.js");
 const { fetch } = require("../js/loadFiles/config");
 const { changePreview } = require("../js/browser/previewHandler.js");
-const { newNotification } = require("../js/notificationHandler");
+const { newNotification, newBannerNotification } = require("../js/notificationHandler");
 const { handleResChange } = require("../js/browser/resolutionHandler.js");
 const { copyDraggedFiles } = require("../js/loadFiles/copyFilesOnDrop.js");
 
@@ -182,6 +182,43 @@ function dropFileHandler(e) {
 
 
 ipcRenderer.on("update-information", (ev, args)=>{
-    console.log(args);
-    alert("NEW UPDATE")
+    var dat = JSON.parse(args);
+    newBannerNotification("A new update is available - <ver>" + dat.version + "</ver>", {persistent: true, buttons: [
+        {value: "Install", click: "installUpdate()", close: true}
+    ]});
 })
+
+
+async function installUpdate() {
+    newNotification("Downloading update..");
+    ipcRenderer.invoke("download-update","")
+}
+
+function updateBarPercentage(dat) {
+    var perc = dat.percent;
+
+    //get the full width of the main bar
+
+    var bar = document.getElementById("download-progress");
+    var box = bar.querySelector(".box");
+    
+    box.style.width = perc + "%";
+
+}
+
+ipcRenderer.on("update-progress", function(ev, dat){
+    var d = dat;
+    console.log(d);
+    updateBarPercentage(dat);
+})
+
+ipcRenderer.on("update-downloaded", function(ev, dat){
+    alert("asdasd")
+    newBannerNotification("Updates has been downloaded.", {persistent: true, buttons: [
+        {value: "Restart", click: "restartApplyUpdate()", close: true}
+    ]});
+})
+
+function restartApplyUpdate() {
+    ipcRenderer.invoke("restart-install", "");
+}
