@@ -4,9 +4,15 @@ function setupProgram() {
     return new Promise((resolve)=>{
 
         var config = {
-            filePath: ""
+            filePath: "",
         }
 
+        localConfig = {
+            resolutions: ["2K"]
+        }
+
+        //Set some configs into the localStorage
+        localStorage.setItem("localConfig", JSON.stringify(localConfig));
         localStorage.setItem("preview", JSON.stringify({type: 0}));
 
         var menu = document.createElement("div");

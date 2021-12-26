@@ -104,8 +104,8 @@ html, body {
     width: 100%;
     background: var(--a-background);
     display: grid;
-    grid-template-rows: auto 2.5rem 0rem; /*The last is to add gap at bottom of sidebar*/
-    row-gap: 0.5rem;
+    grid-template-rows: auto 2.5rem 1.2rem; /*The last is to add gap at bottom of sidebar*/
+    row-gap: 0.2rem;
     grid-template-columns: 100%;
     overflow-y: auto;
 }
@@ -114,7 +114,92 @@ html, body {
     height: 100%;
     width: 100%;
     position: relative;
+    grid-row: 2;
 }
+
+.explorer-wrapper > .side-bar.frontpage > .options-wrapper {
+    height: 100%;
+    width: 100%;
+    grid-row: 1;
+    position: relative;
+}   
+
+
+.explorer-wrapper > .side-bar.frontpage > .settings-buttons-wrapper {
+    grid-row: 3;
+    width: fit-content;
+    height: 100%;
+    padding: 0 1rem 0.2rem 1rem;
+    box-sizing: border-box;
+    position: relative;
+    opacity: 1;
+    margin: auto;
+}
+
+.explorer-wrapper > .side-bar.frontpage > .settings-buttons-wrapper > div{
+    height: 1rem;
+    width: 1rem;
+    opacity: 0.5;
+    cursor: pointer;
+    transition: all 150ms ease-in-out;
+    display: inline-block;
+}
+
+.explorer-wrapper > .side-bar.frontpage > .settings-buttons-wrapper > div:hover{
+    opacity: 1;
+}  
+
+.explorer-wrapper > .side-bar.frontpage > .settings-buttons-wrapper > div svg {
+    height: 100%;
+    color: #ffffff;
+}   
+
+
+
+.explorer-wrapper > .side-bar.frontpage > .settings-buttons-wrapper::before {
+/*     position: absolute;
+    height: 1px;
+    width: 80%;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%);
+    content: ".";
+    color: transparent;
+    background-color: white;
+    opacity: 0.2; */
+}
+
+.explorer-wrapper > .side-bar.frontpage > .options-wrapper .sidebar-notification {
+    height: fit-content;
+    width: 80%;
+    box-sizing: border-box;
+    position: absolute;
+    bottom: 0.5rem;
+    left: 50%;
+    transform: translate(-50%);
+    border-radius: 0.25rem;
+    font-weight: lighter;
+    background: var(--c-background);
+    color: white;
+    padding: 0.4rem 0.5rem;
+    text-align: center;
+    animation: slide-in-notification 200ms ease-in-out both;
+}
+
+@keyframes slide-in-notification {
+    0%{transform:translate(-50%,50%); opacity: 0;}
+    100%{transform:translate(-50%,0); opacity: 0.7;}
+}
+
+@keyframes slide-out-notification {
+    0%{transform:translate(-50%,0); opacity: 0.7;}
+    100%{transform:translate(-50%,50%); opacity: 0;}
+}
+
+.explorer-wrapper > .side-bar.frontpage > .options-wrapper .sidebar-notification span {
+    text-align: center;
+}   
+
 
 .explorer-wrapper > .side-bar.frontpage > .add-files-button-wrapper button {
     height: 80%;
@@ -290,6 +375,7 @@ body.small .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options
     line-height: 1.2rem;   
     display: inline-block;
     box-sizing: border-box;
+    padding: 0.05rem 0.2rem;
     cursor: pointer;
 }   
 
@@ -325,8 +411,74 @@ body.small .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options
     font-weight: lighter;
 }
 
+.explorer-wrapper > .browser.frontpage > #top-tools {
+    height: 1.2rem;
+    width: 100%;
+    padding: 0 0.5rem;
+}   
+
+.explorer-wrapper > .browser.frontpage > #top-tools > div {
+    display: inline-block;
+}
+
+.explorer-wrapper > .browser.frontpage > #top-tools div.select input#enable-select{
+    display: none;
+}
+
+.explorer-wrapper > .browser.frontpage > #top-tools div.select label {
+    color: white;
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: all 150ms ease-in-out;
+    padding: 0.2rem 0.5rem;
+    text-transform: uppercase;
+    font-weight: lighter;
+}
+
+.explorer-wrapper > .browser.frontpage > #top-tools div.select label:hover {
+    background: rgba(255,255,255,0.05);
+}
+
+
+.explorer-wrapper > .browser.frontpage > #top-tools div.select input#enable-select:checked + label {
+    background: white;
+    color:var(--c-background);
+    font-weight: bold;
+    border-radius: 1rem;
+}
+
+.explorer-wrapper > .browser.frontpage > #top-tools div.search {
+    width: fit-content;
+}
+
+
+.explorer-wrapper > .browser.frontpage > #top-tools div.search label svg {
+    height: 1rem;
+    display: inline-block;
+}   
+
+.explorer-wrapper > .browser.frontpage > #top-tools div.search label {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.explorer-wrapper > .browser.frontpage > #top-tools div.search input {
+    background: var(--a-background);
+    border-radius: 1rem;
+    height: 1rem;
+    width: 100%;
+    border: none;
+    outline: none;
+    color: white;
+    padding: 0.2rem 0.5rem;
+    text-transform: uppercase;
+    display: inline-block;
+    font-family: "proxima";
+    vertical-align: top;
+}
+
 .explorer-wrapper > .browser.frontpage > .scroller {
-    height: 100%;
+    height: calc(100% - 2rem);
     width: 100%;
     background: transparent;
     overflow-y: scroll;

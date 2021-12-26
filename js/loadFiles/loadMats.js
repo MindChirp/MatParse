@@ -142,7 +142,7 @@ async function createCards(titles) {
     }
 
 
-    var parent = document.querySelector("#program-wrapper > div.explorer-wrapper > div.browser.frontpage > div > div");
+    var parent = document.querySelector("#program-wrapper > div.explorer-wrapper > div.browser.frontpage > div.scroller > div.grid");
 
     for(let i = 0; i < titles.length; i++) {
         var el = document.createElement("div");

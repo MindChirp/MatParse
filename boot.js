@@ -2,11 +2,13 @@ const { BrowserWindow, app, ipcMain, dialog } = require("electron");
 const path = require("path");
 const fs = require("fs-extra");
 const validFiles = require("./validateFiles.js");
+const dotenv = require("dotenv");
+dotenv.config();
 //Define paths
 const appPath = app.getPath("userData");
 
 var win;
-
+var devToolsWin;
 
 
 //Program has started, check for files etc
@@ -47,11 +49,11 @@ async function bootWindow() {
     })
 
     //Do this if developer
-    //if(process.env.NODE_ENV == "developer") {
+    if(process.env.NODE_ENV == "dev") {
         devToolsWin = new BrowserWindow();
         win.webContents.setDevToolsWebContents(devToolsWin.webContents);
         win.webContents.openDevTools({ mode: 'detach' })
-    //}
+    }
 }
 
 ipcMain.handle("path-modal", async (ev, arg)=>{
@@ -82,6 +84,13 @@ ipcMain.handle("fetch-config", async (ev, arg)=>{
 
     return file;
 
+})
+
+ipcMain.handle("close-program", (ev, arg)=>{
+    if(devToolsWin) {
+        devToolsWin.close();
+    }
+    win.close();
 })
 
 

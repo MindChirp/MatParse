@@ -3,6 +3,9 @@ const { ipcRenderer, electron } = require("electron");
 const { setupProgram } = require("../js/setup.js");
 const { fetch } = require("../js/loadFiles/config");
 const { changePreview } = require("../js/browser/previewHandler.js");
+const { newNotification } = require("../js/notificationHandler");
+const { handleResChange } = require("../js/browser/resolutionHandler.js");
+
 document.body.onload = ()=>{
     ipcRenderer.on("program-state", (ev, dat)=>{
         var data = JSON.parse(dat);
@@ -21,6 +24,7 @@ document.body.onload = ()=>{
     //Check window size type
     handleSizeType();
     setMenuOptions();
+
 }
 
 function startLoading() {
@@ -66,4 +70,22 @@ function setMenuOptions() {
     var par = document.querySelector("#program-wrapper > div.explorer-wrapper > div.side-bar.frontpage > div.options-wrapper > div > div > div > form");
 
     par.getElementsByTagName("input")[preview].checked = true;
+
+    //set the resolutions
+    var res = JSON.parse(localStorage.getItem("localConfig")).resolutions;
+
+    var els = document.querySelector("#program-wrapper > div.explorer-wrapper > div.side-bar.frontpage > div.options-wrapper > div > div > div.resolution").getElementsByTagName("input");
+
+    for(let i = 0; i < res.length; i++) {
+        for(let m = 0; m < els.length; m++) {
+            if(res[i] == els[m].id) {
+                els[m].checked = true;
+            }
+        }
+    }
+}
+
+
+function closeProgram() {
+    ipcRenderer.invoke("close-program", "");
 }
