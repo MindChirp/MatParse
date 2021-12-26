@@ -7,6 +7,7 @@ function setupProgram() {
             filePath: ""
         }
 
+        localStorage.setItem("preview", JSON.stringify({type: 0}));
 
         var menu = document.createElement("div");
         menu.className = "setup-modal";

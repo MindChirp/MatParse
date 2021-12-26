@@ -8,6 +8,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="../css/home.css">
         <link rel="stylesheet" href="../css/setup.css">
+        <script src="../js/browser/previewHandler.js"></script>
     </head>
     <body>
         <div id="program-wrapper">
@@ -23,7 +24,28 @@
             <div class="explorer-wrapper">
                 <div class="side-bar frontpage">
                     <div class="options-wrapper">
+                        <div class="options-selector">
+                            <p class="title">Options</p>
+                            <div class="options">
+                                <span class="title">Preview</span>
+                                <div class="preview">
+                                    <form action=""> 
+                                        <input type="radio" id="box" value="Box" name="preview" checked onchange="changePreview(this)">
+                                        <label for="box"><svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><title>Cube</title><path d="M448 341.37V170.61A32 32 0 00432.11 143l-152-88.46a47.94 47.94 0 00-48.24 0L79.89 143A32 32 0 0064 170.61v170.76A32 32 0 0079.89 369l152 88.46a48 48 0 0048.24 0l152-88.46A32 32 0 00448 341.37z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M69 153.99l187 110 187-110M256 463.99v-200"/></svg><span>Box</span></label>
 
+                                        <input type="radio" id="sphere" value="Sphere" name="preview" onchange="changePreview(this)">
+                                        <label for="sphere"><svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><title>Ellipse</title><circle cx="256" cy="256" r="192" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg><span>Sphere</span></label>
+                                        
+                                        <input type="radio" id="flat" value="Flat" name="preview" onchange="changePreview(this)">
+                                        <label for="flat"><svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><title>Square</title><path d="M416 448H96a32.09 32.09 0 01-32-32V96a32.09 32.09 0 0132-32h320a32.09 32.09 0 0132 32v320a32.09 32.09 0 01-32 32z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg><span>Flat</span></label>
+
+                                    </form>
+                                </div>
+
+                                <span class="title">Resolution</span>
+
+                            </div>
+                        </div>
                     </div>
 
                     <div class="add-files-button-wrapper">

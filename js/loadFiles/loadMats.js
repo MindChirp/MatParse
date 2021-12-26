@@ -9,8 +9,9 @@ var materialPath;
     *0 - No files were found
     *1 - OK, files extracted and process finished
     *2 - Some files weren't extracted, but the process completed anyways
-    *3 - ?
-    *4 - ?
+    *3 - No files were extracted because of an error
+    *4 - Loaded files, but no new archives were found
+    *1005 - Could not display materials in viewport
 */
 
 
@@ -18,28 +19,90 @@ var materialPath;
 
 function loadMats() {
     return new Promise(async (resolve, reject)=>{
-        var status = {status:1}; //Set default resolve response
+        var status = {status:[]}; //Set default resolve response
 
         //Fetch the material folder
-        fetch()
-        .then(res=>{
+        try {
+            var res = await fetch();
             materialPath = JSON.parse(res).filePath;
-            loadFiles(JSON.parse(res).filePath);
-        })
-        .catch(err=>{
-            console.error(err);
-            reject(error);
-        })
+            await loadFiles(JSON.parse(res).filePath); 
+        } catch (error) {
+            console.error(error);
+            reject({status: status.status, additional: 1005});
+        }
 
 
         //First, convert any archived folders
-        try {
-            await searchForZips();
-        } catch (error) {
-            alert("Could not convert any possible zips");
-        }
+        searchForZips()
+        .then(async res=>{
+            if(res.status == 4 || res.status == 3 || res.status == 0) {
+                //If there are no archives to process, do this
+                if(res.status != 1) {
+                    status.status.push(res.status);
+                }
+                resolve(status);
+            } else {
 
-        async function loadFiles(path) {
+                try {
+                    var res = await arrangeFolders();
+                } catch (error) {
+                    console.error(error);
+                    status.status.push(3);
+                    reject(status);
+                }
+                if(status.status.length == 0){
+                    status.status.push(1);
+                    resolve(status);
+                }
+            }
+
+
+            //Done searching for zipped files, extracting them and organizing them,
+        })
+
+    })
+
+}
+
+
+
+var dontDisplay = [
+    "temp",
+]
+
+
+function cleanDirList(dir) {
+    //Remove any unwanted files from the browser list
+    for(let i = 0; i < dontDisplay.length; i++) {
+        var ind = dir.indexOf(dontDisplay[i]);
+        if(ind != -1) {
+            dir.splice(ind,1);
+        }
+    }
+
+    //Remove duplicate files, e.g. (1), (2) etc
+
+    for(let i = 0; i < dir.length; i++) {
+        if(dir[i].indexOf("(") != -1) {
+            dir.splice(i,1);
+        }
+    }
+
+    //Remove any .zip files
+    for(let z = 0; z < dir.length; z++) {
+        console.log(dir[z], dir[z].includes(".zip"));
+        if(dir[z].includes(".zip")) {
+            dir.splice(z,1);
+        }
+    }
+
+    return dir;
+                
+}
+
+function loadFiles(path) {
+    return new Promise(async (resolve, reject)=>{
+
             try {
                 var dir = await fs.readdir(path);
             } catch (error) {
@@ -47,22 +110,73 @@ function loadMats() {
                 reject(error);
             }
 
-            createCards(dir);
+            console.log(dir);
+
+
+            //Check if there are any files already loaded
+            var par = document.querySelector("#program-wrapper > div.explorer-wrapper div.browser.frontpage div.scroller > div.grid");
+            var elements = par.children;
+            if(elements.length > 0) {
+
+                //Remove the already loaded files from the directory array
+                for(let i = 0; i < elements.length; i++) {
+                    var ind = dir.indexOf(elements[i].fileName);
+                    if(ind != -1) {
+                        dir.splice(ind, 1);
+                    }
+                }   
+            }
+
+            var cleaned = cleanDirList(dir);
+
+            
+            createCards(cleaned);
+            resolve();
+        })
+    }
+
+async function createCards(titles) {
+    for(let z = 0; z < titles.length; z++) {
+        console.log(z);
+        console.log(titles[z], titles[z].includes(".zip"));
+        if(titles[z].includes(".zip")) {
+            titles.splice(z-1,1);
         }
-    })
-
-}
+    }
 
 
-function createCards(titles) {
-
+    console.log(titles);
     var parent = document.querySelector("#program-wrapper > div.explorer-wrapper > div.browser.frontpage > div > div");
 
     for(let i = 0; i < titles.length; i++) {
         var el = document.createElement("div");
         el.className = "element";
-        el.innerText = titles[i];
+        el.fileName = titles[i];
+        if(titles[i].includes(".zip")) continue;
+        
+        var img = document.createElement("img");
+        img.className = "preview-image";
+
+        var title = document.createElement("span");
+        title.className = "title";
+        title.innerText = titles[i];
+
+        //Set an image source
+        //CHECKPOINT
+
+        el.appendChild(img);
+        el.appendChild(title);
+
         parent.appendChild(el);
+        try {
+            var _img = await fs.readFile(path.join(materialPath, titles[i], "Previews", titles[i] + "_preview1.jpg"))
+        } catch (error) {
+            var _img = await fs.readFile(path.join(materialPath, titles[i], "Previews", titles[i] + "_Sphere.jpg"))
+        }
+        console.log(_img)
+        var src = "data:image/png;base64," + _img.toString("base64");
+        
+        img.src = src;
     }
 }
 
@@ -70,6 +184,7 @@ var archiveTypes = [".zip"];
 
 function searchForZips() {
     return new Promise(async(resolve, reject)=>{
+        var status = {status: 1} //OK
 
         //Get the path if it not already defined
         if(!materialPath) {
@@ -89,6 +204,7 @@ function searchForZips() {
 
             //Sort out the files that are not an archive
             var names = parseFileNames(dat);
+            if(names.length == 0) {resolve({status: 4}); return;}
             try {
                 await unzipFiles(names);
             } catch (error) {
@@ -99,8 +215,24 @@ function searchForZips() {
                     *10 - no content in array
                     *11 - input is not an array
                     *12 - general error
+                    *13 - OK
                 */
+
+                /* Status codes: 
+                    *0 - No files were found
+                    *1 - OK, files extracted and process finished
+                    *2 - Some files weren't extracted, but the process completed anyways
+                    *3 - No files were extracted because of an error
+                    *4 - Loaded files, but no new archives were found
+                */
+                var errors = new Map([[10,0], [13,1], [12,2], [11,3]]);
+
+                status.status = errors.get(error.status);
+
+                resolve(status);
             }
+
+            resolve({status: 1});
         })
 
 
@@ -141,7 +273,6 @@ function searchForZips() {
                         await extractArchive(files[i]);
                     } catch (error) {
                         status = 12;
-                        reject(reject(status));
                     }
                 }
 
@@ -152,9 +283,10 @@ function searchForZips() {
                     } catch (error) {
                         console.error(error);
                         status = 12;
-                        reject(status);
                     }
                 }
+
+                resolve(status);
 
             })
         }
@@ -185,4 +317,152 @@ function searchForZips() {
     })
 }
 
-module.exports = { loadMats };
+function arrangeFolders() {
+    return new Promise((resolve, reject)=>{
+
+        //Read the dir
+        fs.readdir(path.join(materialPath))
+        .then(async res=>{
+            fixHierarchy(res)
+            .then(()=>{
+                //Delete every folder except the temp folder, copy over the files
+                cleanUp()
+                .then(()=>{
+                    
+                    resolve();
+                })
+                .catch(err=>{
+                    console.error(err);
+                    resolve({status: 3});
+                })
+            })
+            .catch(err=>{
+                console.error(err);
+                resolve({status: 3});
+            })
+        })
+        .catch(err=>{
+            console.error(err);
+            resolve({status: 3});
+        })
+    })
+
+}
+
+/*
+    STATUS CODES
+        *10 - no content in array
+        *11 - input is not an array
+        *12 - general error
+        *13 - OK
+        *14 - general critical error
+*/
+function fixHierarchy(names) {
+    return new Promise(async (resolve, reject)=>{
+        if(!Array.isArray(names)) {reject({status: 11})};
+        if(names.length == 0) {reject({status:10})};
+        
+        var cloneFiles = (folder)=>{
+            return new Promise(async (resolve, reject)=>{
+
+                var unprocessedname = folder;
+                //Remove index number from folder name, e.g. snowtexture001 (2)
+                if(folder.indexOf("(") != -1) {
+                    console.log(folder.indexOf("("));
+                    console.log(folder);
+                    var processedName = folder.substring(
+                        0, 
+                        (folder.lastIndexOf("(")-1)
+                    );
+
+                    folder = processedName;
+                }
+
+                
+                //Clone all the nescessary files
+                //Clone the resolution folders
+                var paths = [
+                    [path.join(materialPath, unprocessedname, folder, "REGULAR"), path.join(materialPath, "temp", folder)],
+                    [path.join(materialPath, unprocessedname, folder, "Previews"), path.join(materialPath, "temp", folder, "Previews")]
+                ];
+
+                for(x of paths) {
+                    try {
+                        await fs.copy(x[0], x[1])
+                    } catch (error) {
+                        console.error(error); reject(error);
+                    }
+                   
+                }
+
+                resolve();
+
+                
+            })
+
+        }
+
+        try {
+            await fs.mkdir(path.join(materialPath, "temp"));
+        } catch (error) {
+            //Could not make the directory
+            reject({status: 14});
+        }
+
+        for(x of names) {
+            //Create the temporary folder for copying
+            try {
+                if(x.indexOf("(") == -1) {  
+                    await fs.mkdir(path.join(materialPath, "temp", x))
+                } 
+                await cloneFiles(x);
+                
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+
+        resolve();
+        
+    })
+}
+
+function cleanUp() {
+    return new Promise(async (resolve, reject)=>{
+
+        //Let's delete the used folders except from the temp folder
+        try {
+            var dir = await fs.readdir(materialPath);
+        } catch (error) {
+            console.error(error);
+        }
+
+        for(let i = 0; i < dir.length; i++) {
+            if(dir[i] == "temp") continue;
+            
+            try {
+                fs.rmSync(path.join(materialPath, dir[i]), {recursive:true,force:true});
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        //Done with deleting, copy over everything
+        fs.copy(path.join(materialPath, "temp"), materialPath)
+        .then(()=>{
+            try {
+                fs.rmSync(path.join(materialPath,"temp"),{recursive:true,force:true})
+            } catch (error) {
+                reject(error);
+            }
+            resolve()
+        })
+        .catch(err=>{
+            reject(err);
+        })
+    })
+
+}
+
+module.exports = { loadMats, loadFiles };
