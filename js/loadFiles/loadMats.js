@@ -90,7 +90,6 @@ function cleanDirList(dir) {
 
     //Remove any .zip files
     for(let z = 0; z < dir.length; z++) {
-        console.log(dir[z], dir[z].includes(".zip"));
         if(dir[z].includes(".zip")) {
             dir.splice(z,1);
         }
@@ -102,7 +101,6 @@ function cleanDirList(dir) {
 
 function loadFiles(path) {
     return new Promise(async (resolve, reject)=>{
-
             try {
                 var dir = await fs.readdir(path);
             } catch (error) {
@@ -111,7 +109,6 @@ function loadFiles(path) {
             }
 
             console.log(dir);
-
 
             //Check if there are any files already loaded
             var par = document.querySelector("#program-wrapper > div.explorer-wrapper div.browser.frontpage div.scroller > div.grid");
@@ -127,6 +124,8 @@ function loadFiles(path) {
                 }   
             }
 
+            console.log(dir);
+
             var cleaned = cleanDirList(dir);
 
             
@@ -137,15 +136,12 @@ function loadFiles(path) {
 
 async function createCards(titles) {
     for(let z = 0; z < titles.length; z++) {
-        console.log(z);
-        console.log(titles[z], titles[z].includes(".zip"));
         if(titles[z].includes(".zip")) {
             titles.splice(z-1,1);
         }
     }
 
 
-    console.log(titles);
     var parent = document.querySelector("#program-wrapper > div.explorer-wrapper > div.browser.frontpage > div > div");
 
     for(let i = 0; i < titles.length; i++) {
@@ -167,13 +163,33 @@ async function createCards(titles) {
         el.appendChild(img);
         el.appendChild(title);
 
+        var paths = [
+            ["_preview2", "_Cube"],
+            ["_preview1", "_Sphere"],
+            ["_flat", "_Flat"]
+        ];
+
         parent.appendChild(el);
-        try {
-            var _img = await fs.readFile(path.join(materialPath, titles[i], "Previews", titles[i] + "_preview1.jpg"))
-        } catch (error) {
-            var _img = await fs.readFile(path.join(materialPath, titles[i], "Previews", titles[i] + "_Sphere.jpg"))
+
+        //get the config
+        var conf = JSON.parse(localStorage.getItem("preview")).type;
+        var _img;
+
+        var z = 0;
+        await loop();
+        async function loop() {
+            try {
+                _img = await fs.readFile(path.join(materialPath, titles[i], "Previews", titles[i] + paths[conf][z] + ".jpg"));
+            } catch (error) {
+                if(z < paths[conf].length-1) {
+                    z++
+                    await loop();
+                }
+            }
         }
-        console.log(_img)
+
+
+
         var src = "data:image/png;base64," + _img.toString("base64");
         
         img.src = src;
@@ -368,8 +384,6 @@ function fixHierarchy(names) {
                 var unprocessedname = folder;
                 //Remove index number from folder name, e.g. snowtexture001 (2)
                 if(folder.indexOf("(") != -1) {
-                    console.log(folder.indexOf("("));
-                    console.log(folder);
                     var processedName = folder.substring(
                         0, 
                         (folder.lastIndexOf("(")-1)

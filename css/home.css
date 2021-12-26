@@ -107,6 +107,7 @@ html, body {
     grid-template-rows: auto 2.5rem 0rem; /*The last is to add gap at bottom of sidebar*/
     row-gap: 0.5rem;
     grid-template-columns: 100%;
+    overflow-y: auto;
 }
 
 .explorer-wrapper > .side-bar.frontpage > .options-wrapper, .add-files-button-wrapper {
@@ -195,6 +196,7 @@ html, body {
     cursor: pointer;
 }
 
+
 .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options .preview label:hover svg {
     transform: translate(0,-0.1rem);
 }
@@ -205,7 +207,7 @@ html, body {
     transition: all 150ms ease-in-out;
 }
 
-.explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options .preview label span {
+body:not(.small) .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options .preview label span {
     display: block;
     width: fit-content;
     color: white;
@@ -217,19 +219,88 @@ html, body {
     padding: 0.1rem 0.2rem;
 }
 
-.explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options .preview input:checked + label span {
+
+
+body:not(.small) .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options .preview input:checked + label span {
     background: white;
     color:var(--a-background);
-    border-radius: 1rem;
     padding: 0.1rem 0.5rem;
     box-sizing: border-box;
+    border-radius: 2rem;
+    opacity: 1;
+}
+
+body.small .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options .preview input:checked + label svg {
+    color: var(--a-background);
+    z-index: 2;
+    position: relative;
+}
+
+body.small .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options .preview label span {
+    display: block;
+    width: fit-content;
+    color: transparent;
+    text-align: center;
+    left: 50%;
+    transform: translate(-50%);
+    transition: all 150ms ease-in-out;
+    position: absolute;
+    height: 100%;
+    width: 0;
+    border-radius: 2rem;
+    top: 0;
+    color: transparent;
+}
+
+body.small .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options .preview input:checked + label span {
+    background: white;
+    color: transparent;
+    border-radius: 1rem;
+    box-sizing: border-box;
+    z-index: 1;
+    width: 100%;
+}
+
+.explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options > .resolution {
+    width: 100%;
+    height:fit-content;
+    margin-top: 0.2rem;
+}
+
+.explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options > .resolution form {
+    height: fit-content;
+    padding-left: 0.3rem;
+    text-align: center;
+}
+
+.explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options > .resolution form.open {
+    height: auto;
+}   
+
+.explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options > .resolution input[type=checkbox]{
+    display: none;
+}
+
+.explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options > .resolution label {
+    color: white;
+    opacity: 0.5;
+    transition: all 150ms ease-in-out;
+    width: 1.5rem;
+    height: 1.2rem;
+    line-height: 1.2rem;   
+    display: inline-block;
+    box-sizing: border-box;
+    cursor: pointer;
+}   
+
+.explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options > .resolution input[type=checkbox]:checked + label{
+    background-color: white;
+    border-radius: 1rem;
+    color: var(--a-background);
+    padding: 0.05rem 0.2rem;
+    opacity: 1;
     
 }
-
-.explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options .preview input:checked + label svg {
-}
-
-
 
 
 
@@ -262,13 +333,13 @@ html, body {
     overflow-x: hidden;
 }
 
-.explorer-wrapper > .browser.frontpage > .scroller::-webkit-scrollbar {
+/* .explorer-wrapper > .browser.frontpage > .scroller */::-webkit-scrollbar {
     width: 5px;
     border-radius: 1rem;
     background: var(--a-background);
 }
 
-.explorer-wrapper > .browser.frontpage > .scroller::-webkit-scrollbar-thumb {
+/* .explorer-wrapper > .browser.frontpage > .scroller */::-webkit-scrollbar-thumb {
     background: white;
     border-radius: 1rem;
 }
@@ -313,12 +384,19 @@ html, body {
 
 body:not(.small) .explorer-wrapper > .browser.frontpage > .scroller > .grid > .element span.title{
     position: absolute;
-    bottom: 0;
+    bottom: 0.1rem;
     left: 50%;
     transform: translate(-50%);
     padding: 0.2rem 0.5rem;
-    border-radius: 0.5rem 0.5rem 0 0;
+    border-radius: 0.25rem;
+    backdrop-filter: blur(5px) brightness(70%);
+    transition: all 100ms ease-in-out;
 }
+
+body:not(.small) .explorer-wrapper > .browser.frontpage > .scroller > .grid > .element:hover span.title{
+    opacity: 0;
+}
+
 
 body.small .explorer-wrapper > .browser.frontpage > .scroller > .grid > .element img.preview-image{
     height: 100%;
@@ -326,7 +404,14 @@ body.small .explorer-wrapper > .browser.frontpage > .scroller > .grid > .element
     margin: 0;
     float: left;
     display: inline-block;
+    transition: all 1000ms ease-in-out;
+    border-radius: 0 1rem 1rem 0;
 }
+
+body.small .explorer-wrapper > .browser.frontpage > .scroller > .grid > .element:hover img.preview-image{
+    transform: scale(2) translate(-30%);
+}
+
 
 body.small .explorer-wrapper > .browser.frontpage > .scroller > .grid {
     grid-auto-rows: 5rem !important;

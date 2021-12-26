@@ -8,7 +8,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="../css/home.css">
         <link rel="stylesheet" href="../css/setup.css">
-        <script src="../js/browser/previewHandler.js"></script>
     </head>
     <body>
         <div id="program-wrapper">
@@ -30,7 +29,7 @@
                                 <span class="title">Preview</span>
                                 <div class="preview">
                                     <form action=""> 
-                                        <input type="radio" id="box" value="Box" name="preview" checked onchange="changePreview(this)">
+                                        <input type="radio" id="box" value="Box" name="preview" onchange="changePreview(this)">
                                         <label for="box"><svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><title>Cube</title><path d="M448 341.37V170.61A32 32 0 00432.11 143l-152-88.46a47.94 47.94 0 00-48.24 0L79.89 143A32 32 0 0064 170.61v170.76A32 32 0 0079.89 369l152 88.46a48 48 0 0048.24 0l152-88.46A32 32 0 00448 341.37z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M69 153.99l187 110 187-110M256 463.99v-200"/></svg><span>Box</span></label>
 
                                         <input type="radio" id="sphere" value="Sphere" name="preview" onchange="changePreview(this)">
@@ -43,6 +42,28 @@
                                 </div>
 
                                 <span class="title">Resolution</span>
+                                <div class="resolution">
+                                    <form action="">
+                                        <input type="checkbox" id="1K">
+                                        <label for="1K">1K</label>
+
+                                        <input type="checkbox" id="2K">
+                                        <label for="2K">2K</label>
+
+                                        <input type="checkbox" id="3K">
+                                        <label for="3K">3K</label>
+
+                                        <input type="checkbox" id="4K">
+                                        <label for="4K">4K</label>
+                                        
+                                        <input type="checkbox" id="6K">
+                                        <label for="6K">6K</label>
+
+                                        <input type="checkbox" id="8K">
+                                        <label for="8K">8K</label>
+                                    </form>
+                                </div>
+                                <span class="title">Tags</span>
 
                             </div>
                         </div>
