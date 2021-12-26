@@ -36,6 +36,18 @@ async function applyPreviewType(type) {
         var el = els[i];
         var file = el.fileName;
 
+
+        var prImg = el.querySelector(".preview-image");
+
+        var sleep = (ms)=>{
+            return new Promise(resolve=>{
+                setTimeout(()=>{
+                    resolve();
+                }, ms)
+            })
+        }
+
+
         //Get the image
         var paths = [
             ["_preview2", "_Cube"],
@@ -50,6 +62,7 @@ async function applyPreviewType(type) {
         async function loop() {
             try {
                 _img = await fs.readFile(path.join(materialPath, file, "Previews", file + paths[type][z] + ".jpg"));
+                console.log(path.join(materialPath, file, "Previews", file + paths[type][z] + ".jpg"), "OK")
             } catch (error) {
                 console.log(error)
                 if(z < paths[type].length-1) {
@@ -58,8 +71,13 @@ async function applyPreviewType(type) {
                 }
             }
         }
+        
+
+        if(!_img) {continue};
+
         var src = "data:image/png;base64," + _img.toString("base64");
-        el.querySelector(".preview-image").src = src
+        prImg.src = src;
+
     }
 }
 

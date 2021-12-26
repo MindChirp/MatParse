@@ -25,7 +25,7 @@ function loadMats() {
         try {
             var res = await fetch();
             materialPath = JSON.parse(res).filePath;
-            await loadFiles(JSON.parse(res).filePath); 
+            //await loadFiles(JSON.parse(res).filePath); 
         } catch (error) {
             console.error(error);
             reject({status: status.status, additional: 1005});
@@ -44,7 +44,7 @@ function loadMats() {
             } else {
 
                 try {
-                    var res = await arrangeFolders();
+                    var res = await arrangeFolders(res.processedFiles);
                 } catch (error) {
                     console.error(error);
                     status.status.push(3);
@@ -108,7 +108,6 @@ function loadFiles(path) {
                 reject(error);
             }
 
-            console.log(dir);
 
             //Check if there are any files already loaded
             var par = document.querySelector("#program-wrapper > div.explorer-wrapper div.browser.frontpage div.scroller > div.grid");
@@ -124,7 +123,6 @@ function loadFiles(path) {
                 }   
             }
 
-            console.log(dir);
 
             var cleaned = cleanDirList(dir);
 
@@ -169,7 +167,6 @@ async function createCards(titles) {
             ["_flat", "_Flat"]
         ];
 
-        parent.appendChild(el);
 
         //get the config
         var conf = JSON.parse(localStorage.getItem("preview")).type;
@@ -189,10 +186,14 @@ async function createCards(titles) {
         }
 
 
+        if(!_img) {continue};
 
         var src = "data:image/png;base64," + _img.toString("base64");
         
         img.src = src;
+
+        parent.appendChild(el);
+
     }
 }
 
@@ -200,6 +201,9 @@ var archiveTypes = [".zip"];
 
 function searchForZips() {
     return new Promise(async(resolve, reject)=>{
+
+        var processedFiles = [];
+
         var status = {status: 1} //OK
 
         //Get the path if it not already defined
@@ -220,6 +224,7 @@ function searchForZips() {
 
             //Sort out the files that are not an archive
             var names = parseFileNames(dat);
+            processedFiles = names;
             if(names.length == 0) {resolve({status: 4}); return;}
             try {
                 await unzipFiles(names);
@@ -248,7 +253,7 @@ function searchForZips() {
                 resolve(status);
             }
 
-            resolve({status: 1});
+            resolve({status: 1, processedFiles: processedFiles});
         })
 
 
@@ -333,16 +338,16 @@ function searchForZips() {
     })
 }
 
-function arrangeFolders() {
+function arrangeFolders(files) {
     return new Promise((resolve, reject)=>{
 
         //Read the dir
         fs.readdir(path.join(materialPath))
         .then(async res=>{
-            fixHierarchy(res)
+            fixHierarchy(res, files)
             .then(()=>{
-                //Delete every folder except the temp folder, copy over the files
-                cleanUp()
+                //Delete every new folder except the temp folder, copy over the files
+                cleanUp(files)
                 .then(()=>{
                     
                     resolve();
@@ -373,7 +378,7 @@ function arrangeFolders() {
         *13 - OK
         *14 - general critical error
 */
-function fixHierarchy(names) {
+function fixHierarchy(names, addedFiles) {
     return new Promise(async (resolve, reject)=>{
         if(!Array.isArray(names)) {reject({status: 11})};
         if(names.length == 0) {reject({status:10})};
@@ -391,6 +396,7 @@ function fixHierarchy(names) {
 
                     folder = processedName;
                 }
+
 
                 
                 //Clone all the nescessary files
@@ -429,7 +435,16 @@ function fixHierarchy(names) {
                 if(x.indexOf("(") == -1) {  
                     await fs.mkdir(path.join(materialPath, "temp", x))
                 } 
-                await cloneFiles(x);
+                var skip = true;
+                for(let i = 0; i < addedFiles.length; i++) {
+                    if(x == path.parse(addedFiles[i]).name) {
+                        skip = false;
+                    }
+                }
+
+                if(!skip) {
+                    await cloneFiles(x);
+                }
                 
             } catch (error) {
                 console.error(error);
@@ -442,7 +457,7 @@ function fixHierarchy(names) {
     })
 }
 
-function cleanUp() {
+function cleanUp(addedFiles) {
     return new Promise(async (resolve, reject)=>{
 
         //Let's delete the used folders except from the temp folder
@@ -454,11 +469,19 @@ function cleanUp() {
 
         for(let i = 0; i < dir.length; i++) {
             if(dir[i] == "temp") continue;
-            
-            try {
-                fs.rmSync(path.join(materialPath, dir[i]), {recursive:true,force:true});
-            } catch (error) {
-                console.error(error);
+            var skip = true;
+            for(let m = 0; m < addedFiles.length; m++) {
+                if(path.parse(addedFiles[m]).name == dir[i]) {
+                    skip = false;
+                }
+            }
+            if(!skip) {
+
+                try {
+                    fs.rmSync(path.join(materialPath, dir[i]), {recursive:true,force:true});
+                } catch (error) {
+                    console.error(error);
+                }
             }
         }
 

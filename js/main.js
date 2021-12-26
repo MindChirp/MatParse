@@ -5,6 +5,10 @@ const { fetch } = require("../js/loadFiles/config");
 const { changePreview } = require("../js/browser/previewHandler.js");
 const { newNotification } = require("../js/notificationHandler");
 const { handleResChange } = require("../js/browser/resolutionHandler.js");
+const { copyDraggedFiles } = require("../js/loadFiles/copyFilesOnDrop.js");
+
+var dropFileModal;
+
 
 document.body.onload = ()=>{
     ipcRenderer.on("program-state", (ev, dat)=>{
@@ -25,21 +29,31 @@ document.body.onload = ()=>{
     handleSizeType();
     setMenuOptions();
 
+    //Register file dragging events
+    registerFileDraggingEvents();
+
+    dropFileModal = document.querySelector("#drop-file-modal");
 }
 
 function startLoading() {
-    loadMats()
-    .then(res=>{
-        //Reload files
-        console.log(res);
-        fetch()
+    return new Promise((resolve, reject)=>{
+
+        loadMats()
         .then(res=>{
-            //loadFiles(JSON.parse(res).filePath);
+            //Reload files
+            console.log(res);
+            fetch()
+            .then(async res=>{
+                await loadFiles(JSON.parse(res).filePath);
+                resolve();
+            })
+        })
+        .catch(err=>{
+            console.error(err);
+            reject(err);
         })
     })
-    .catch(err=>{
-        console.error(err);
-    })
+
 }
 
 
@@ -89,3 +103,85 @@ function setMenuOptions() {
 function closeProgram() {
     ipcRenderer.invoke("close-program", "");
 }
+
+function minimizeProgram() {
+    ipcRenderer.invoke("minimize-program", "");
+}
+
+function registerFileDraggingEvents() {
+    document.addEventListener("dragover", dragOverHandler);
+    document.addEventListener("drop", dropFileHandler);
+}
+
+function dragLeaveHandler() {
+    dropFileModal.classList.remove("display");
+}
+
+
+
+function dragOverHandler(e) {
+    e.preventDefault();
+    if(!dropFileModal.classList.contains("display")) {
+        dropFileModal.classList.add("display");
+        dropFileModal.addEventListener("dragleave", dragLeaveHandler);
+
+    }
+}
+
+function dropFileHandler(e) {
+
+    var copyFiles = [];
+
+    e.preventDefault();
+    e.stopPropagation();
+    for (const f of e.dataTransfer.files) {
+        // Using the path attribute to get absolute file path
+        
+        //Check if the selected items are archives
+        console.log(f)
+        if(f.name.toString().indexOf(".zip") != -1) {
+            //Is a zip
+            copyFiles.push({path: f.path, name: f.name})
+        }
+
+      }
+
+
+      var par = document.querySelector("#program-wrapper > div.explorer-wrapper > div.browser.frontpage > div.scroller");
+      var loader = document.createElement("span");
+      loader.className = "file-loading-indication";
+      loader.innerText = "Loading content";
+      loader.remove = function() {
+          console.log(this);
+          this.parentNode.removeChild(this);
+      }
+      par.appendChild(loader)
+
+
+      //start copying over files etc
+        copyDraggedFiles(copyFiles)
+        .then(res=>{
+            startLoading()
+            .then(res=>{
+                loader.remove();
+            })
+            .catch(err=>{
+                loader.remove();
+
+            })
+        })
+        .catch(err=>{
+            loader.remove();
+            console.error(err);
+        })
+
+
+
+      dropFileModal.classList.remove("display");
+}
+
+
+ipcRenderer.on("update-information", (ev, args)=>{
+    console.log(args);
+    alert("NEW UPDATE")
+})

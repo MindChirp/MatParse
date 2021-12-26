@@ -1,6 +1,9 @@
 const { BrowserWindow, app, ipcMain, dialog } = require("electron");
 const path = require("path");
 const fs = require("fs-extra");
+const { autoUpdater } = require("electron-updater");
+const log = require('electron-log');
+
 const validFiles = require("./validateFiles.js");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -10,6 +13,13 @@ const appPath = app.getPath("userData");
 var win;
 var devToolsWin;
 
+app.setAppUserModelId('MineTrack');
+
+autoUpdater.logger = log;
+autoUpdater.logger.transports.file.level = 'info';
+
+autoUpdater.autoDownload = false;
+autoUpdater.autoInstallOnAppQuit = false;
 
 //Program has started, check for files etc
 
@@ -46,6 +56,8 @@ async function bootWindow() {
         //Loaded
         await win.webContents.send("program-state", JSON.stringify(res))
         win.show();
+
+        autoUpdater.checkForUpdates();
     })
 
     //Do this if developer
@@ -93,9 +105,24 @@ ipcMain.handle("close-program", (ev, arg)=>{
     win.close();
 })
 
+ipcMain.handle("minimize-program", (ev, arg)=>{
+    if(devToolsWin) {
+        devToolsWin.minimize();
+    }
+    win.minimize();
+})
+
 
 
 
 app.on("ready", ()=>{
     bootWindow();
+})
+
+
+
+//Handle auto updating
+
+autoUpdater.on("update-available", (ev)=>{
+    win.webContents.send("update-information", JSON.stringify(ev));
 })
