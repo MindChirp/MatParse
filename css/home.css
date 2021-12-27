@@ -10,6 +10,12 @@ html, body {
     user-select: none;
 }
 
+::selection {
+    color:white;
+    background: var(--a-accent);
+}
+
+
 @font-face {
     font-family: 'proxima';
     src: url('../Proxima\ Nova\ Font.otf');
@@ -491,13 +497,16 @@ body.small .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options
 }
 
 .explorer-wrapper > .browser.frontpage > #top-tools {
-    height: 1.2rem;
+    height: 1.5rem;
     width: 100%;
     padding: 0 0.5rem;
+    box-sizing: border-box;
 }   
 
 .explorer-wrapper > .browser.frontpage > #top-tools > div {
     display: inline-block;
+    vertical-align: top;
+    height: 100%;
 }
 
 .explorer-wrapper > .browser.frontpage > #top-tools div.select input#enable-select{
@@ -528,36 +537,100 @@ body.small .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options
 
 .explorer-wrapper > .browser.frontpage > #top-tools div.search {
     width: fit-content;
+    border-radius: 1rem;
+    position: relative;
+    overflow: hidden;
+    height: 1.5rem;
+    transition: background 150ms ease-in-out;
+    padding: 0.1rem;
 }
+
+.explorer-wrapper > .browser.frontpage > #top-tools div.search:hover {
+    background: var(--a-background);
+}   
 
 
 .explorer-wrapper > .browser.frontpage > #top-tools div.search label svg {
-    height: 1rem;
+    height: 100%;
     display: inline-block;
+    color: white;
+    transform: scale(0.7);
 }   
 
 .explorer-wrapper > .browser.frontpage > #top-tools div.search label {
     display: inline-block;
     vertical-align: top;
+    height: 100%;
+    cursor: pointer;
 }
 
 .explorer-wrapper > .browser.frontpage > #top-tools div.search input {
-    background: var(--a-background);
-    border-radius: 1rem;
-    height: 1rem;
-    width: 100%;
+    background: transparent;
+    height: 100%;
+    transform: translate(0,-0.05rem);
+    width: 10rem;
     border: none;
     outline: none;
     color: white;
-    padding: 0.2rem 0.5rem;
     text-transform: uppercase;
     display: inline-block;
     font-family: "proxima";
     vertical-align: top;
 }
 
+.explorer-wrapper > .browser.frontpage > #top-tools > .right-side {
+    float: right;
+    height: 100%;
+}
+
+.explorer-wrapper > .browser.frontpage > #top-tools > .right-side > div {
+    display: inline-block;
+}
+
+.explorer-wrapper > .browser.frontpage > #top-tools > .right-side > div.compressed-toggle {
+    padding: 0.1rem;
+
+}
+
+.explorer-wrapper > .browser.frontpage > #top-tools > .right-side > div.compressed-toggle input {
+    display: none;
+}
+
+.explorer-wrapper > .browser.frontpage > #top-tools > .right-side > div.compressed-toggle label {
+    color: white;
+    cursor: pointer;
+    transition: all 150ms ease-in-out;
+    border-radius: 1rem;
+    display: inline-block;
+    height: 1.5rem;
+    padding: 0.2rem;
+    box-sizing: border-box;
+    line-height: 1.2rem;
+    text-transform: uppercase;
+}
+
+.explorer-wrapper > .browser.frontpage > #top-tools > .right-side > div.compressed-toggle label svg {
+    color: white;
+    height: 100%;
+    margin: auto;
+}   
+
+
+.explorer-wrapper > .browser.frontpage > #top-tools > .right-side > div.compressed-toggle label:hover {
+    background:rgba(21, 21, 21,0.7);
+}
+
+.explorer-wrapper > .browser.frontpage > #top-tools > .right-side > div.compressed-toggle input:checked + label {
+    background: white;
+}
+
+.explorer-wrapper > .browser.frontpage > #top-tools > .right-side > div.compressed-toggle input:checked + label svg {
+    color:var(--a-background);
+}
+
 .explorer-wrapper > .browser.frontpage > .scroller {
-    height: calc(100% - 2rem);
+    height: calc(100% - 2.5rem);
+    padding-top: 0.5rem;
     width: 100%;
     background: transparent;
     overflow-y: scroll;
@@ -592,7 +665,7 @@ body.small .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options
 
 .explorer-wrapper > .browser.frontpage > .scroller > .grid {
     grid-template-columns: repeat(auto-fill, minmax(15rem, auto));
-    padding: 0.5rem 0.5rem 0 0.5rem;
+    padding: 0rem 0.5rem 0 0.5rem;
     box-sizing: border-box;
     grid-auto-rows: 7rem;
     height: fit-content;
@@ -601,6 +674,24 @@ body.small .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options
     column-gap: 1rem;
     display: grid;
 }
+
+.explorer-wrapper > .browser.frontpage.compressed > .scroller > .grid {
+    grid-template-columns: repeat(auto-fill, minmax(7rem, auto));
+}
+
+.explorer-wrapper > .browser.frontpage.compressed > .scroller > .grid > .element span.title{
+    display: none;
+}
+
+.explorer-wrapper > .browser.frontpage.compressed > .scroller > .grid > .element img.preview-image{
+    height: 100%;
+    width: auto;
+    transition: all 1000ms ease-in-out;
+}   
+
+
+
+
 
 .explorer-wrapper > .browser.frontpage > .scroller > .grid > .element{
     height: 100%;
@@ -652,7 +743,7 @@ body:not(.small) .explorer-wrapper > .browser.frontpage > .scroller > .grid > .e
 }
 
 
-body.small .explorer-wrapper > .browser.frontpage > .scroller > .grid > .element img.preview-image{
+body.small .explorer-wrapper > .browser.frontpage:not(.compressed) > .scroller > .grid > .element img.preview-image{
     height: 100%;
     width: auto;
     margin: 0;
@@ -662,7 +753,7 @@ body.small .explorer-wrapper > .browser.frontpage > .scroller > .grid > .element
     border-radius: 0 1rem 1rem 0;
 }
 
-body.small .explorer-wrapper > .browser.frontpage > .scroller > .grid > .element:hover img.preview-image{
+body.small .explorer-wrapper > .browser.frontpage:not(.compressed) > .scroller > .grid > .element:hover img.preview-image{
     transform: scale(2) translate(-20%);
 }
 

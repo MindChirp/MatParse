@@ -228,3 +228,17 @@ ipcRenderer.on("update-downloaded", function(ev, dat){
 function restartApplyUpdate() {
     ipcRenderer.invoke("restart-install", "");
 }
+
+
+function handleGridType(type) {
+    var par = document.body.querySelector(".browser.frontpage");
+    if(type == "compressed") {
+        if(!par.classList.contains("compressed")) {
+            par.classList.add("compressed");
+        } 
+    } else if(type == "wide") {
+        if(par.classList.contains("compressed")) {
+            par.classList.remove("compressed");
+        } 
+    }
+} 
