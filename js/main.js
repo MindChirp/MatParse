@@ -213,7 +213,6 @@ ipcRenderer.on("update-progress", function(ev, dat){
 })
 
 ipcRenderer.on("update-downloaded", function(ev, dat){
-    alert("asdasd")
     newBannerNotification("Updates has been downloaded.", {persistent: true, buttons: [
         {value: "Restart", click: "restartApplyUpdate()", close: true}
     ]});
