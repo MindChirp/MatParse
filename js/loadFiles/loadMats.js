@@ -415,6 +415,24 @@ function fixHierarchy(names, addedFiles) {
                    
                 }
 
+
+                //Rename the resolution folders to 2K_SnowTracks001, for instance
+                try {
+                    var dirFiles = await fs.readdir(path.join(materialPath, "temp", folder));
+                } catch (error) {
+                    console.error(error);
+                }
+
+                for(x of dirFiles) {
+                    if(x != "Previews" && x.split("_").length == 1) {
+                        try {
+                            await fs.rename(path.join(materialPath, "temp", folder, x), path.join(materialPath, "temp", folder, x + "_" + folder));
+                        } catch (error) {
+                            console.error(error);
+                        }
+                    }
+                }
+
                 resolve();
 
                 

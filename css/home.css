@@ -343,6 +343,7 @@ body.small .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options
     color: transparent;
     border-radius: 1rem;
     box-sizing: border-box;
+    height: 2rem;
     z-index: 1;
     width: 100%;
 }

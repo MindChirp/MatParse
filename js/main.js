@@ -171,6 +171,7 @@ function dropFileHandler(e) {
             })
         })
         .catch(err=>{
+            newNotification("Could not load the files");
             loader.remove();
             console.error(err);
         })
@@ -209,7 +210,7 @@ function updateBarPercentage(dat) {
 ipcRenderer.on("update-progress", function(ev, dat){
     var d = dat;
     console.log(d);
-    updateBarPercentage(dat);
+    updateBarPercentage(JSON.parse(dat));
 })
 
 ipcRenderer.on("update-downloaded", function(ev, dat){
