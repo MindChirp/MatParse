@@ -6,6 +6,7 @@ const { changePreview } = require("../js/browser/previewHandler.js");
 const { newNotification, newBannerNotification } = require("../js/notificationHandler");
 const { handleResChange } = require("../js/browser/resolutionHandler.js");
 const { copyDraggedFiles } = require("../js/loadFiles/copyFilesOnDrop.js");
+const { showProgramInformation } = require("../js/programInfo.js");
 
 var dropFileModal;
 
@@ -182,6 +183,11 @@ function dropFileHandler(e) {
 }
 
 
+function checkForUpdates() {
+    ipcRenderer.invoke("check-for-update", "");
+    newNotification("Checking for updates");
+}
+
 ipcRenderer.on("update-information", (ev, args)=>{
     var dat = JSON.parse(args);
     newBannerNotification("A new update is available - <ver>" + dat.version + "</ver>", {persistent: true, buttons: [
@@ -201,7 +207,7 @@ function updateBarPercentage(dat) {
     //get the full width of the main bar
 
     var bar = document.getElementById("download-progress");
-    var box = bar.querySelector(".box");
+    var box = bar.querySelector(".bar");
     
     box.style.width = perc + "%";
 

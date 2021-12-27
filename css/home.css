@@ -741,3 +741,87 @@ body.small .explorer-wrapper > .browser.frontpage > .scroller > .grid > .element
     background: var(--a-accent);
     transition: all 100ms ease-in-out;
 }
+
+
+.program-information-pane {
+    position: absolute;
+    height: 30%;
+    width: calc(100% - 4rem);
+    border-radius: 1rem;
+    background:var(--b-background);
+    bottom: 1rem;
+    left: 50%;
+    transform: translate(-50%);
+    animation: slide-in-about 200ms ease-in-out both;
+    z-index: 10;
+    overflow: hidden;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.program-information-pane > .title {
+    background: white;
+    color:var(--b-background);
+    padding: 0.2rem 0.5rem;
+    border-radius: 1rem;
+    margin-bottom: 0.5rem;
+    display: block;
+    width: fit-content;
+}
+
+.program-information-pane > .close {
+    position: absolute;
+    top:0.5rem;
+    right: 0.5rem;
+    height: 1.5rem;
+    width: 1.5rem;
+    padding: 0;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 100%;
+    transition: all 150ms ease-in-out;
+}
+
+.program-information-pane > .close:hover {
+    background: white;
+}
+
+.program-information-pane > .close:hover svg{
+    color:var(--b-background);
+}
+
+
+.program-information-pane > .close svg {
+    height: 100%;
+    width: 100%;
+    color: white;
+    transition: all 150ms ease-in-out;
+}
+
+
+.program-information-pane > .tile {
+    height: fit-content;
+    width: fit-content;
+    display: inline-block;
+    margin-right: 1rem;
+}
+
+.program-information-pane > .tile > .title{
+    margin: 0;
+    color: white;
+}
+
+.program-information-pane > .tile > .body{
+    color: white;
+    opacity: 0.5;
+}
+
+
+
+
+@keyframes slide-in-about {
+    0%{transform: translate(-50%,calc(100% + 2rem)); opacity: 0;}
+    100%{transform: translate(-50%,0); opacity: 1;}
+}

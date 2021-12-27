@@ -123,6 +123,11 @@ app.on("ready", ()=>{
 
 //Handle auto updating
 
+ipcMain.handle("check-for-update", async (ev)=>{
+    autoUpdater.checkForUpdates();
+    return true;
+})
+
 autoUpdater.on("update-available", (ev)=>{
     win.webContents.send("update-information", JSON.stringify(ev));
 })
