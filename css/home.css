@@ -635,6 +635,7 @@ body.small .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options
     background: transparent;
     overflow-y: scroll;
     overflow-x: hidden;
+    margin-top: 0.5rem;
 }
 
 .explorer-wrapper > .browser.frontpage > .scroller .file-loading-indication {
@@ -676,7 +677,10 @@ body.small .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options
 }
 
 .explorer-wrapper > .browser.frontpage.compressed > .scroller > .grid {
-    grid-template-columns: repeat(auto-fill, minmax(7rem, auto));
+    grid-template-columns: repeat(auto-fill, minmax(5rem, auto));
+    grid-auto-rows: 5rem;
+    row-gap: 0.5rem !important;
+    column-gap: 0.5rem !important;
 }
 
 .explorer-wrapper > .browser.frontpage.compressed > .scroller > .grid > .element span.title{
@@ -706,9 +710,56 @@ body.small .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options
     animation: fade-in 200ms ease-in-out both 0.5s;
 }
 
+.explorer-wrapper > .browser.frontpage > .scroller > .grid > .element .element-warning {
+    position: absolute;
+    left: 50%;
+    top: 0.2rem;
+    transform: translate(-50%);
+    background: #ff6666;
+    padding: 0.2rem 0.5rem;
+    border-radius: 1rem;
+    cursor: pointer;
+}
+.explorer-wrapper > .browser.frontpage > .scroller > .grid > .element .element-warning svg {
+    display: inline-block;
+    float: left;
+    height: 1rem;
+    font-weight: bold;
+    color: white;
+    stroke: white;
+}
+
+
+.explorer-wrapper > .browser.frontpage > .scroller > .grid > .element.selected::before {
+    animation: fade-in 150ms ease-in-out both;
+}
+
+
+.explorer-wrapper > .browser.frontpage > .scroller > .grid > .element::before {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    content: ".";
+    color: transparent;
+    height: 0.5rem;
+    width: 0.5rem;
+    border-radius: 1rem;
+    background: white;
+    opacity: 0;
+}
+
+.explorer-wrapper > .browser.frontpage > .scroller > .grid > .element:not(.selected)::before {
+    animation: fade-out 150ms ease-in-out both;
+}
+
 @keyframes fade-in {
     0%{opacity: 0;}
     100%{opacity: 1;}
+}
+
+@keyframes fade-out {
+    0%{opacity: 1;}
+    100%{opacity: 0;}
 }
 
 .explorer-wrapper > .browser.frontpage > .scroller > .grid > .element:hover {
@@ -726,6 +777,36 @@ body.small .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options
     -webkit-user-drag: none;
     transition: opacity 100ms ease-in-out;
 }
+
+.explorer-wrapper > .browser.frontpage > .scroller > .grid > .element:hover .resolutions {
+    display: block;
+}
+
+.explorer-wrapper > .browser.frontpage > .scroller > .grid > .element.selected .resolutions {
+    display: block;
+}
+
+.explorer-wrapper > .browser.frontpage > .scroller > .grid > .element .resolutions {
+    height: fit-content;
+    width: fit-content;
+    position: absolute;
+    top: 0.2rem;
+    left: 0.5rem;
+    display: none;
+}
+
+.explorer-wrapper > .browser.frontpage > .scroller > .grid > .element .resolutions span.res {
+    background: white;
+    border-radius: 1rem;
+    color:var(--a-background);
+    text-transform: uppercase;
+    padding: 0.1rem 0.3rem;
+    display: inline-block;
+    margin-right: 0.2rem;
+    height: fit-content;
+    font-size: 0.8rem;
+}
+
 
 body:not(.small) .explorer-wrapper > .browser.frontpage > .scroller > .grid > .element span.title{
     position: absolute;
@@ -758,7 +839,7 @@ body.small .explorer-wrapper > .browser.frontpage:not(.compressed) > .scroller >
 }
 
 
-body.small .explorer-wrapper > .browser.frontpage > .scroller > .grid {
+body.small .explorer-wrapper > .browser.frontpage:not(.compressed) > .scroller > .grid {
     grid-auto-rows: 5rem !important;
 }
 

@@ -29,13 +29,13 @@ async function applyPreviewType(type) {
     */
 
     //Get the elements
-    var par = document.querySelector("#program-wrapper > div.explorer-wrapper > div.browser.frontpage > div > div");
+    var par = document.querySelector("#program-wrapper > div.explorer-wrapper > div.browser.frontpage > div.scroller > div.grid");
     var els = par.children;
     console.log(els);
     for(let i = 0; i < els.length; i++) {
         var el = els[i];
+        console.log(el);
         var file = el.fileName;
-
 
         var prImg = el.querySelector(".preview-image");
 
@@ -60,11 +60,11 @@ async function applyPreviewType(type) {
         var z = 0;
         await loop();
         async function loop() {
+            console.log(materialPath, file, paths[type][z])
             try {
                 _img = await fs.readFile(path.join(materialPath, file, "Previews", file + paths[type][z] + ".jpg"));
-                console.log(path.join(materialPath, file, "Previews", file + paths[type][z] + ".jpg"), "OK")
             } catch (error) {
-                console.log(error)
+                console.error(error)
                 if(z < paths[type].length-1) {
                     z++
                     await loop();

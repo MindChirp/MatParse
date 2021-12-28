@@ -1,4 +1,4 @@
-const { loadMats, loadFiles } = require("../js/loadFiles/loadMats");
+const { loadMats, loadFiles } = require("../js/loadFiles/loadMats1");
 const { ipcRenderer, electron } = require("electron");
 const { setupProgram } = require("../js/setup.js");
 const { fetch } = require("../js/loadFiles/config");
@@ -7,6 +7,7 @@ const { newNotification, newBannerNotification } = require("../js/notificationHa
 const { handleResChange } = require("../js/browser/resolutionHandler.js");
 const { copyDraggedFiles } = require("../js/loadFiles/copyFilesOnDrop.js");
 const { showProgramInformation } = require("../js/programInfo.js");
+
 
 var dropFileModal;
 

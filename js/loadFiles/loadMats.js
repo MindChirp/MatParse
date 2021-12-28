@@ -3,6 +3,8 @@ const { fetch } = require("./config.js");
 const path = require("path");
 const fs = require("fs-extra");
 const AdmZip = require("adm-zip");
+const { createMaterial } = require("../../js/browser/materialHandler.js");
+
 var materialPath;
 
 /* Status codes: 
@@ -143,58 +145,38 @@ async function createCards(titles) {
     var parent = document.querySelector("#program-wrapper > div.explorer-wrapper > div.browser.frontpage > div.scroller > div.grid");
 
     for(let i = 0; i < titles.length; i++) {
-        var el = document.createElement("div");
-        el.className = "element";
-        el.fileName = titles[i];
-        if(titles[i].includes(".zip")) continue;
-        
-        var img = document.createElement("img");
-        img.className = "preview-image";
+        try {
+            //Get resolutions of this material
 
-        var title = document.createElement("span");
-        title.className = "title";
-        title.innerText = titles[i];
+            await createMaterial(titles[i]);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+}
 
-        //Set an image source
-        //CHECKPOINT
+var doNotReturn = [
+    "Previews",
+    "configs"
+]
 
-        el.appendChild(img);
-        el.appendChild(title);
-
-        var paths = [
-            ["_preview2", "_Cube"],
-            ["_preview1", "_Sphere"],
-            ["_flat", "_Flat"]
-        ];
-
-
-        //get the config
-        var conf = JSON.parse(localStorage.getItem("preview")).type;
-        var _img;
-
-        var z = 0;
-        await loop();
-        async function loop() {
-            try {
-                _img = await fs.readFile(path.join(materialPath, titles[i], "Previews", titles[i] + paths[conf][z] + ".jpg"));
-            } catch (error) {
-                if(z < paths[conf].length-1) {
-                    z++
-                    await loop();
+function getMaterialResolutions(material) {
+    return new Promise((resolve, reject)=>{
+        fs.readdir(path.join(materialPath, "temp", material))
+        .then(res=>{  
+            //Remove unwanted folder names from the return list
+            for(let i = 0; i < doNotReturn.length; i++) {
+                if(res.indexOf(doNotReturn[i]) != -1) {
+                    res.splice(res.indexOf(doNotReturn[i]), 1);
                 }
             }
-        }
 
-
-        if(!_img) {continue};
-
-        var src = "data:image/png;base64," + _img.toString("base64");
-        
-        img.src = src;
-
-        parent.appendChild(el);
-
-    }
+            resolve(res);
+        })
+        .catch(err=>{
+            reject(err);
+        })
+    })
 }
 
 var archiveTypes = [".zip"];
@@ -423,8 +405,19 @@ function fixHierarchy(names, addedFiles) {
                     console.error(error);
                 }
 
+                //Filter out the folders that shouldn't be renamed
+                var doNotRename = [
+                    "configs",
+                    "Previews"
+                ];
+
+                for(x of doNotRename) {
+                    dirFiles.splice(dirFiles.indexOf(x), 1);
+                }
+
+                //Rename files
                 for(x of dirFiles) {
-                    if(x != "Previews" && x.split("_").length == 1) {
+                    if(x.split("_").length == 1) {
                         try {
                             await fs.rename(path.join(materialPath, "temp", folder, x), path.join(materialPath, "temp", folder, x + "_" + folder));
                         } catch (error) {
@@ -432,6 +425,112 @@ function fixHierarchy(names, addedFiles) {
                         }
                     }
                 }
+
+
+                function createConfig() {
+                    return new Promise(async (resolve, reject)=>{
+                        try {
+                            var file = await fs.readFile(path.join(materialPath, "temp", folder, "configs", "materialConfig.json"), "utf8");
+                            await mergeConfigs(JSON.parse(file));
+                            resolve();
+                        } catch (error) {
+                            console.error(error);
+                            //did not work
+                            try {
+                                await createNew();
+                                resolve();
+                            } catch (error) {
+                                reject();
+                            }
+                        }
+
+
+
+                        async function createNew() {
+                            try {
+                                console.log(folder, configTemplate);
+                                await fs.mkdir(path.join(materialPath, "temp", folder, "configs"));
+                                await fs.writeFile(path.join(materialPath, "temp", folder, "configs", "materialConfig.json"), JSON.stringify(configTemplate, null, 4));
+                            } catch (error) {
+                                //Did not work..
+                                console.error(error);
+                                return false;
+                            }
+
+                            return true;
+                        }
+
+                        async function mergeConfigs(file) {
+                            alert("merging")
+                            //configTemplate is the one thats new
+                            var date = new Date();
+                            file.editedStamp = date;
+
+                            file.resolutions.push(configTemplate.resolutions);
+
+                            try {
+                                await fs.writeFile(path.join(materialPath, "temp", folder, "configs", "materialConfig.json"), JSON.stringify(file, null, 4));
+                                return true;
+                            } catch (error) {
+                                return false;
+                            }
+                            
+                        }
+                    })
+                }
+
+                //Create config folder for MatParse configuration files
+                const configTemplate = {
+                    tags: [
+
+                    ],
+                    resolutions: [
+
+                    ],
+                    timeStamp:undefined,
+                    editedStamp:undefined
+                }
+
+                //Get material resolutions
+                try {
+                    var resolutions = await getMaterialResolutions(folder);
+                } catch (error) {
+                    //could not get resolutions
+                    console.error(error);
+                }
+
+                resolutions = resolutions || [];
+            
+                //Remove the other stuff from the resolution folder names
+                var newRes = []; 
+                if(resolutions.length > 0) {
+                    for(let i = 0; i < resolutions.length; i++) {
+                        newRes.push(resolutions[i].split("_")[0]);
+                    }
+                }
+        
+                if(newRes.length > 0) {
+                    resolutions = newRes;
+                }
+
+
+
+                //Set config values
+
+                configTemplate.resolutions = resolutions;                
+                //There are no tags as of now
+
+                //Set date
+                var date = new Date();
+                configTemplate.timeStamp = date;
+
+
+                try {
+                    await createConfig();
+                } catch (error) {
+                    console.error(error);
+                }
+
 
                 resolve();
 
@@ -455,6 +554,7 @@ function fixHierarchy(names, addedFiles) {
                 } 
                 var skip = true;
                 for(let i = 0; i < addedFiles.length; i++) {
+                    console.log(x, path.path(addedFiles[i].name));
                     if(x == path.parse(addedFiles[i]).name) {
                         skip = false;
                     }
@@ -520,4 +620,4 @@ function cleanUp(addedFiles) {
 
 }
 
-module.exports = { loadMats, loadFiles };
+//module.exports = { loadMats, loadFiles };
