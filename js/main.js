@@ -8,9 +8,7 @@ const { handleResChange } = require("../js/browser/resolutionHandler.js");
 const { copyDraggedFiles } = require("../js/loadFiles/copyFilesOnDrop.js");
 const { showProgramInformation } = require("../js/programInfo.js");
 
-
 var dropFileModal;
-
 
 document.body.onload = ()=>{
     ipcRenderer.on("program-state", (ev, dat)=>{
@@ -110,29 +108,47 @@ function minimizeProgram() {
     ipcRenderer.invoke("minimize-program", "");
 }
 
+var counter = 0;
+
 function registerFileDraggingEvents() {
+    document.addEventListener("dragenter", dragEnterHandler);
     document.addEventListener("dragover", dragOverHandler);
     document.addEventListener("drop", dropFileHandler);
+
+
+    document.addEventListener("mouseleave", (ev)=>{
+    })
 }
 
 function dragLeaveHandler() {
-    dropFileModal.classList.remove("display");
+    counter--
+    if(counter == 0) {
+        dropFileModal.classList.remove("prevent-display");
+        dropFileModal.classList.remove("display");   
+    }
 }
-
 
 
 function dragOverHandler(e) {
     e.preventDefault();
+}
+
+
+function dragEnterHandler(e) {
+    e.preventDefault();
+    console.log(counter);
+    counter++
     if(!dropFileModal.classList.contains("display")) {
         dropFileModal.classList.add("display");
-        dropFileModal.addEventListener("dragleave", dragLeaveHandler);
+        document.addEventListener("dragleave", dragLeaveHandler);       
 
     }
 }
 
 function dropFileHandler(e) {
-
     var copyFiles = [];
+    counter = 0;
+    dropFileModal.classList.remove("display");
 
     e.preventDefault();
     e.stopPropagation();
@@ -180,7 +196,6 @@ function dropFileHandler(e) {
 
 
 
-      dropFileModal.classList.remove("display");
 }
 
 

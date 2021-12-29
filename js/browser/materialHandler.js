@@ -1,5 +1,7 @@
+const { ipcRenderer } = require("electron");
 const fs = require("fs-extra");
 const path = require("path");
+const { fetchMaterialConfig, fetch } = require("../loadFiles/config");
 
 var materialPath;
 
@@ -42,6 +44,26 @@ function createMaterial(material) {
 
             warn.appendChild(svg);
         }
+
+        el.setAttribute("draggable", "true");
+
+        el.addEventListener("dragstart", async (e)=>{
+            e.preventDefault();
+            //Get config of element
+            try {
+                var conf = await fetchMaterialConfig(filePath);
+            } catch (error) {
+                console.error(conf);
+            }
+
+            dropFileModal = document.querySelector("#drop-file-modal");
+            dropFileModal.classList.add("prevent-display");
+
+            var fileName = path.join(materialPath, filePath);
+            console.log(path.join(process.cwd(), fileName));
+            ipcRenderer.send("ondragstart", fileName);
+
+        })
 
         var img = document.createElement("img");
         img.className = "preview-image";

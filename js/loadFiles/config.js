@@ -2,6 +2,8 @@
 const { ipcRenderer } = require("electron");
 
 const fs = require("fs-extra");
+const path = require("path");
+
 async function fetch() {
     return new Promise(async (resolve, reject)=>{
 
@@ -17,4 +19,22 @@ async function fetch() {
     })
 }
 
-module.exports = { fetch };
+var materialPath;
+
+function fetchMaterialConfig(material) {
+    return new Promise(async (resolve, reject)=>{
+        if(!materialPath) {
+            materialPath = JSON.parse(await fetch()).filePath;
+        } 
+        //Read the file
+        fs.readFile(path.join(materialPath, material, "configs", "materialConfig.json"))
+        .then(res=>{
+            resolve(JSON.parse(res));
+        })
+        .catch(err=>{
+            reject(err);
+        })
+    })
+}
+
+module.exports = { fetch, fetchMaterialConfig };

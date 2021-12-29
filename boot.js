@@ -37,7 +37,8 @@ async function bootWindow() {
             nodeIntegration: true,
             contextIsolation: false,
             enableRemoteModule: true,
-            backgroundThrottling: false
+            backgroundThrottling: false,
+            preload: path.join(__dirname, "preload.js")
         },
         
     });
@@ -150,4 +151,17 @@ autoUpdater.on("update-downloaded", (ev)=>{
 ipcMain.handle("restart-install", (ev)=>{
     autoUpdater.quitAndInstall();
     return true;
+})
+
+
+const iconName = path.join(__dirname, "tree.jpg");
+console.log(iconName)
+//const icon = fs.createReadStream(iconName);
+//fs.writeFileSync(path.join(__dirname, 'drag-and-drop.md'), '# First file to test drag and drop')
+//Handle file dragging
+ipcMain.on("ondragstart", (ev, filePath)=>{
+    ev.sender.startDrag({
+        file: filePath,
+        icon: iconName
+    })
 })
