@@ -2,6 +2,7 @@ const { ipcRenderer } = require("electron");
 const fs = require("fs-extra");
 const path = require("path");
 const { fetchMaterialConfig, fetch } = require("../loadFiles/config");
+const { dragMaterialOut } = require("../browser/dragMaterialHandler");
 
 var materialPath;
 
@@ -48,20 +49,23 @@ function createMaterial(material) {
         el.setAttribute("draggable", "true");
 
         el.addEventListener("dragstart", async (e)=>{
+            //Drag initiated
+
             e.preventDefault();
-            //Get config of element
+
+            //Move the drag processing into appropriate module
             try {
-                var conf = await fetchMaterialConfig(filePath);
+                var list = await dragMaterialOut(e.currentTarget);
             } catch (error) {
-                console.error(conf);
+                console.error(error);
             }
+
+            console.log(list);
 
             dropFileModal = document.querySelector("#drop-file-modal");
             dropFileModal.classList.add("prevent-display");
 
-            var fileName = path.join(materialPath, filePath);
-            console.log(path.join(process.cwd(), fileName));
-            ipcRenderer.send("ondragstart", fileName);
+            ipcRenderer.send("ondragstart", list);
 
         })
 
@@ -87,7 +91,6 @@ function createMaterial(material) {
         }
 
         var selectFunction = function(){
-            console.log(this);
 
             this.classList.toggle("selected");
         }

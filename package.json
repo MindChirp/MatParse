@@ -1,6 +1,6 @@
 {
   "name": "matparse",
-  "version": "0.0.7",
+  "version": "0.1.7",
   "description": "",
   "main": "boot.js",
   "scripts": {

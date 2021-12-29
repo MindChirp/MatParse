@@ -161,7 +161,7 @@ console.log(iconName)
 //Handle file dragging
 ipcMain.on("ondragstart", (ev, filePath)=>{
     ev.sender.startDrag({
-        file: filePath,
+        files: filePath,
         icon: iconName
     })
 })
