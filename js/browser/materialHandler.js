@@ -3,6 +3,7 @@ const fs = require("fs-extra");
 const path = require("path");
 const { fetchMaterialConfig, fetch } = require("../loadFiles/config");
 const { dragMaterialOut } = require("../browser/dragMaterialHandler");
+const { newNotification } = require("../notificationHandler");
 
 var materialPath;
 
@@ -58,6 +59,8 @@ function createMaterial(material) {
                 var list = await dragMaterialOut(e.currentTarget);
             } catch (error) {
                 console.error(error);
+                newNotification("Select a resolution");
+                return;
             }
 
             console.log(list);

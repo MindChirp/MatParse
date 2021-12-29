@@ -1,6 +1,7 @@
 const fs = require("fs-extra");
 const { fetchMaterialConfig, fetch } = require("../loadFiles/config");
 const path = require("path");
+const { newNotification } = require("../notificationHandler");
 
 /*
     STATUS CODES
@@ -42,6 +43,7 @@ function dragMaterialOut(el) {
         if(selectedResolutions.length == 0) {
             status.push(1);
             reject(status);
+            return;
         }
 
         //Get selected elements
@@ -69,7 +71,9 @@ function dragMaterialOut(el) {
             }
         }
 
-
+        if(folderList.length > 1) {
+            newNotification("Only one folder will be dragged at a time");
+        }
 
         resolve(folderList);
     })
@@ -171,7 +175,7 @@ function processIndividualMaterial(element) {
             //No
             
             //Add single resolution folder (full path to folderList array)
-            folderList.push(path.join(materialPath, material, matchingReses[0]));
+            folderList.push(path.join(materialPath, material, matchingReses[0] + "_" + material));
         }
         
         resolve();
@@ -184,8 +188,9 @@ function copyMatchingResolutions(material, resolutions) {
 
         for(let i = 0; i < resolutions.length; i++) {
             try {
-                await fs.copy(path.join(filePath, resolutions[i]), path.join(filePath, material, resolutions[i]))
+                await fs.copy(path.join(filePath, resolutions[i] + "_" + material), path.join(filePath, material, resolutions[i] + "_" + material))
             } catch (error) {
+                console.error(error);
                 //a resolution did not get added..
                 status.push(4);
             }

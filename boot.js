@@ -160,8 +160,16 @@ console.log(iconName)
 //fs.writeFileSync(path.join(__dirname, 'drag-and-drop.md'), '# First file to test drag and drop')
 //Handle file dragging
 ipcMain.on("ondragstart", (ev, filePath)=>{
-    ev.sender.startDrag({
-        files: filePath,
-        icon: iconName
-    })
+
+    try {
+        ev.sender.startDrag({
+            file: filePath[0],
+            icon: iconName
+        })
+    } catch (error) {
+        console.error(error);
+    }
+    
+
+
 })
