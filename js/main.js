@@ -1,5 +1,5 @@
 const { loadMats, loadFiles } = require("../js/loadFiles/loadMats1");
-const { ipcRenderer, electron } = require("electron");
+const { ipcRenderer, electron, contextBridge } = require("electron");
 const { setupProgram } = require("../js/setup.js");
 const { fetch } = require("../js/loadFiles/config");
 const { changePreview } = require("../js/browser/previewHandler.js");
@@ -8,6 +8,7 @@ const { handleResChange } = require("../js/browser/resolutionHandler.js");
 const { copyDraggedFiles } = require("../js/loadFiles/copyFilesOnDrop.js");
 const { showProgramInformation } = require("../js/programInfo.js");
 const path = require("path");
+const { contextMenuHandler, removeContextMenu } = require("../js/contextMenuHandler");
 
 const { searchMaterials } = require("../js/browser/searchHandler");
 //import { searchMaterials } from "./browser/searchHandler.mjs";
@@ -174,7 +175,6 @@ function dropFileHandler(e) {
         // Using the path attribute to get absolute file path
         
         //Check if the selected items are archives
-        console.log(f)
         if(f.name.toString().indexOf(".zip") != -1) {
             //Is a zip
             copyFiles.push({path: f.path, name: f.name})

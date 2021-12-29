@@ -1007,3 +1007,73 @@ body.small .explorer-wrapper > .browser.frontpage > .scroller > .grid > .element
     0%{transform: translate(-50%,calc(100% + 2rem)); opacity: 0;}
     100%{transform: translate(-50%,0); opacity: 1;}
 }
+
+
+/*Context menu styling*/
+ctxmenu#context-menu {
+    height: fit-content;
+    width: 10rem;
+    background:var(--c-background);
+    border-radius: 0.5rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    box-sizing: border-box;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+ctxmenu#context-menu .wrapper {
+    height: 100%;
+    width: 100%;
+}
+
+ctxmenu#context-menu .wrapper .emphasis {
+    height: 1.5rem;
+    width: 100%;
+    background: transparent;
+    color: white;
+    padding: auto;
+    padding: 0 0.5rem;
+}
+
+ctxmenu#context-menu .wrapper .emphasis span {
+    line-height: 1.5rem;
+}
+
+
+ctxmenu#context-menu .wrapper .nominal {
+    background:var(--b-background);
+    border-radius: 0.5rem;
+    height: fit-content;
+    width: 100%;
+    padding: 0.5rem 0;
+    box-sizing: border-box;
+}
+
+ctxmenu#context-menu .wrapper .nominal > button {
+    background: transparent;
+    border: none;
+    outline: none;
+
+    height: 1.5rem;
+    width: 100%;
+    color: white;
+    
+    text-align: left;
+    text-transform: capitalize;
+    font-size: 1rem;
+
+    cursor: pointer;
+
+    padding: 0 0 0 0.5rem;
+    font-family: "proxima";
+}
+
+ctxmenu#context-menu .wrapper .nominal > button:hover {
+    background:var(--a-background);
+
+}
+
+
+

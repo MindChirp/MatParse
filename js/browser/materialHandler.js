@@ -27,7 +27,7 @@ function createMaterial(material) {
         var parent = document.querySelector("#program-wrapper > div.explorer-wrapper > div.browser.frontpage > div.scroller > div.grid");
 
         var el = document.createElement("div");
-        el.className = "element";
+        el.className = "element material cls-context-menu";
         el.fileName = filePath;
         el.title = filePath;
         if(material.includes(".zip")) reject();

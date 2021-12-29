@@ -259,7 +259,6 @@ function processArchiveFolder(folder) {
                 console.error(error);
                 reject();
             }
-
             
             //Fetch material resolutions in an array, e.g. ["2K"] STOP
             try {
@@ -294,7 +293,39 @@ function processArchiveFolder(folder) {
             } catch (error) {
                 reject();
             }
+
+
+
+            //Get aspect ratio of material, write it to the config
+            var img = new Image();
+
+            try {
+                var dir = folder.withoutIndex || folder.original;
+                var previewFiles = await fs.readdir(path.join(materialPath, "temp", dir, "Previews"));
+                var url = await (await fs.readFile(path.join(materialPath, "temp", dir, "Previews", previewFiles[0]))).toString("base64");
+            } catch (error) {
+                console.error(error);
+            }
+
+            img.src = "data:image/png;base64," + url;
+
+            var waitForLoad = ()=>{
+                img.onload = ()=>{
+                    return;
+                }
+                img.onerror = ()=>{
+                    return;
+                }
+            }
+
+            await waitForLoad();
+
+            var dims = {x: img.width, y: img.height};
+
+            var commonDenom = gcd(dims.x, dims.y)
             
+            var asp = (img.width / commonDenom) + ":" + (img.height / commonDenom);
+
             //Fetch material resolutions in an array, e.g. ["2K"]
             try {
                 var resolutions = await fetchMaterialResolutions(folder);
@@ -305,6 +336,7 @@ function processArchiveFolder(folder) {
             var confTemplate = {
                 resolutions: [],
                 createdStamp: undefined,
+                aspectRatio: asp,
                 editedStamp: 0
             }
 
@@ -368,6 +400,14 @@ function copyMatchingRootFolder(folder) {
 
         resolve();
     })
+}
+
+
+function gcd(a,b){
+    if (b == 0) {
+       return a;
+    }
+    return gcd(b, a % b);
 }
 
 
