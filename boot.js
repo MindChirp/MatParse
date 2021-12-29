@@ -169,7 +169,15 @@ ipcMain.on("ondragstart", (ev, filePath)=>{
     } catch (error) {
         console.error(error);
     }
-    
+})
 
 
+ipcMain.handle("open-folder-selection", async (ev)=>{
+    var result = await dialog.showOpenDialog(win, {
+        properties: ['openFile', 'multiSelections'],
+        filters:[
+            {name: 'Archives', extensions: ["zip"]}
+        ]
+    })
+    return result.filePaths;
 })

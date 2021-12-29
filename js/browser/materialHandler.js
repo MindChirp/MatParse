@@ -63,7 +63,6 @@ function createMaterial(material) {
                 return;
             }
 
-            console.log(list);
 
             dropFileModal = document.querySelector("#drop-file-modal");
             dropFileModal.classList.add("prevent-display");

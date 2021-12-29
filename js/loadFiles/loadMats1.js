@@ -436,8 +436,20 @@ function renameResolutionFolders(folder) {
             }
         }
 
+        var filters = [
+            folder
+        ]
+
         //Rename the folders
         for(let i = 0; i < folders.length; i++) {
+            var skip = false
+            for(x of filters) {
+                if(folders[i].includes(x)) {
+                    skip = true
+                }
+            }
+            if(skip) continue;
+            
             if(folders[i].split("_").length == 1) {
                 var src = path.join(materialPath, "temp", withoutExt, folders[i]);
                 var dest = path.join(materialPath, "temp", withoutExt, folders[i] + "_" + withoutExt);

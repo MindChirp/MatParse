@@ -1,6 +1,12 @@
 const config = require("../package.json");
 
 function showProgramInformation() {
+    if(document.querySelector(".program-information-pane.smooth-shadow")) {
+        var el = document.querySelector(".program-information-pane.smooth-shadow");
+        el.parentNode.removeChild(el);
+        return;
+    }
+
     var el = document.createElement("div");
     el.className = "program-information-pane smooth-shadow";
     document.body.appendChild(el);

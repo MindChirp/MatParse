@@ -7,6 +7,7 @@ const { newNotification, newBannerNotification } = require("../js/notificationHa
 const { handleResChange } = require("../js/browser/resolutionHandler.js");
 const { copyDraggedFiles } = require("../js/loadFiles/copyFilesOnDrop.js");
 const { showProgramInformation } = require("../js/programInfo.js");
+const path = require("path");
 
 var dropFileModal;
 
@@ -164,6 +165,7 @@ function dropFileHandler(e) {
 
       }
 
+      if(copyFiles.length == 0) {newNotification("No archives found"); return;}
 
       var par = document.querySelector("#program-wrapper > div.explorer-wrapper > div.browser.frontpage > div.scroller");
       var loader = document.createElement("span");
@@ -258,3 +260,47 @@ function handleGridType(type) {
         } 
     }
 } 
+
+
+
+
+async function addFilesFromButton() {
+    //Open file modal
+    var archives = [];
+
+    var paths = await ipcRenderer.invoke("open-folder-selection", "");
+    if(paths.length == 0) {newNotification("No folders selected"); return;}
+    
+    for(let i = 0; i < paths.length; i++) {
+        var obj = {path: paths[i], name: path.basename(paths[i])};
+        archives.push(obj);
+    }
+
+
+    
+    var par = document.querySelector("#program-wrapper > div.explorer-wrapper > div.browser.frontpage > div.scroller");
+    var loader = document.createElement("span");
+    loader.className = "file-loading-indication";
+    loader.innerText = "Loading content";
+    loader.remove = function() {
+        console.log(this);
+        this.parentNode.removeChild(this);
+    }
+    par.appendChild(loader)
+
+    copyDraggedFiles(archives)
+    .then(res=>{
+        startLoading()
+        .then(res=>{
+            loader.remove();
+        })
+        .catch(err=>{
+            console.error(err);
+            newNotification("Could not load files");
+        })
+    })
+    .catch(err=>{
+        newNotification("Could not parse files");
+        console.error(err);
+    })
+}

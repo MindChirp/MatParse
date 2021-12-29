@@ -789,11 +789,14 @@ body.small .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options
 
 .explorer-wrapper > .browser.frontpage > .scroller > .grid > .element .resolutions {
     height: fit-content;
-    width: fit-content;
+    width:fit-content;
     position: absolute;
     top: 0.2rem;
     left: 0.5rem;
     display: none;
+    max-width: calc(100% - 2rem);
+    max-height: calc(100% - 0.4rem);
+    overflow: hidden;
 }
 
 .explorer-wrapper > .browser.frontpage > .scroller > .grid > .element .resolutions span.res {

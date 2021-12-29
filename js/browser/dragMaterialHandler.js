@@ -167,6 +167,8 @@ function processIndividualMaterial(element) {
 
             //Add subfolder (full path) to folderList array
             folderList.push(path.join(materialPath, material, material));
+
+            console.log(folderList);
         } else {
             //No
             
@@ -181,7 +183,8 @@ function processIndividualMaterial(element) {
 function copyMatchingResolutions(material, resolutions) {
     return new Promise(async (resolve, reject)=>{
         var filePath = path.join(materialPath, material);
-
+        console.log(resolutions);
+        
         for(let i = 0; i < resolutions.length; i++) {
             try {
                 await fs.copy(path.join(filePath, resolutions[i] + "_" + material), path.join(filePath, material, resolutions[i] + "_" + material))
@@ -201,7 +204,6 @@ function cleanUpCopyFolder(material) {
     return new Promise(async (resolve, reject)=>{
         //Delete any contents of the material subfolder with same name as main folder STOP
         var folderPath = path.join(materialPath, material, material);
-        console.log(folderPath)
 
         try {
             await fs.mkdir(folderPath, {recursive: true});
@@ -218,11 +220,16 @@ function cleanUpCopyFolder(material) {
             return;
         }
 
-        for(let i = 0; i < folders.length; i++) {
-            try {
-                await fs.rm(path.join(folderPath, folders[i]));
-            } catch (error) {
-                //Did not go so well.. ok screw that
+        console.log("FOLDERS ", folders);
+
+        if(folders.length > 0) {
+            for(let i = 0; i < folders.length; i++) {
+                try {
+                    await fs.rm(path.join(folderPath, folders[i]), {recursive:true});
+                } catch (error) {
+                    console.error(error);
+                    //Did not go so well.. ok screw that
+                }
             }
         }
 
