@@ -71,10 +71,6 @@ function dragMaterialOut(el) {
             }
         }
 
-        if(folderList.length > 1) {
-            newNotification("Only one folder will be dragged at a time");
-        }
-
         resolve(folderList);
     })
 

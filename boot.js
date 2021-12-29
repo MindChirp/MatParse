@@ -163,7 +163,7 @@ ipcMain.on("ondragstart", (ev, filePath)=>{
 
     try {
         ev.sender.startDrag({
-            file: filePath[0],
+            files: filePath,
             icon: iconName
         })
     } catch (error) {
