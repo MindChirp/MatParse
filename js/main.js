@@ -9,6 +9,9 @@ const { copyDraggedFiles } = require("../js/loadFiles/copyFilesOnDrop.js");
 const { showProgramInformation } = require("../js/programInfo.js");
 const path = require("path");
 
+const { searchMaterials } = require("../js/browser/searchHandler");
+//import { searchMaterials } from "./browser/searchHandler.mjs";
+
 var dropFileModal;
 
 document.body.onload = ()=>{
@@ -80,14 +83,28 @@ function handleSizeType() {
 function setMenuOptions() {
     //get the preview type
 
-    var preview = JSON.parse(localStorage.getItem("preview")).type;
+    try {
+        var preview = JSON.parse(localStorage.getItem("preview")).type;
+    } catch (error) {
+        console.log(error);
+    }
+    preview = preview || 0;
 
     var par = document.querySelector("#program-wrapper > div.explorer-wrapper > div.side-bar.frontpage > div.options-wrapper > div > div > div > form");
 
     par.getElementsByTagName("input")[preview].checked = true;
 
     //set the resolutions
-    var res = JSON.parse(localStorage.getItem("localConfig")).resolutions;
+    try {
+        var res = JSON.parse(localStorage.getItem("localConfig")).resolutions;
+    } catch (error) {
+        console.log(error);
+        localStorage.setItem("localConfig", JSON.stringify({resolutions:["2K"]}));
+    }
+
+    res = res || ["2K"];
+
+    console.log(res);
 
     var els = document.querySelector("#program-wrapper > div.explorer-wrapper > div.side-bar.frontpage > div.options-wrapper > div > div > div.resolution").getElementsByTagName("input");
 

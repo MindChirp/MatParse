@@ -521,7 +521,9 @@ function loadFiles(path) {
 
 
         var cleaned = cleanDirList(dir);
+        
 
+        localStorage.setItem("loaded-materials", JSON.stringify(cleaned));
         
         createCards(cleaned);
         resolve();
@@ -541,8 +543,6 @@ async function createCards(titles) {
 
     for(let i = 0; i < titles.length; i++) {
         try {
-            //Get resolutions of this material
-
             await createMaterial(titles[i]);
         } catch (error) {
             console.error(error);

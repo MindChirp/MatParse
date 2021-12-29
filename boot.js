@@ -4,7 +4,7 @@ const fs = require("fs-extra");
 const { autoUpdater } = require("electron-updater");
 const log = require('electron-log');
 
-const validFiles = require("./validateFiles.js");
+const validFiles = require("./validateFiles");
 const dotenv = require("dotenv");
 dotenv.config();
 //Define paths
