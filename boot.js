@@ -43,7 +43,7 @@ async function bootWindow() {
         
     });
 
-    win.setAlwaysOnTop(true, "screen-saver");
+    win.setAlwaysOnTop(true);
 
     win.loadFile("./htmls/home.html");
 
