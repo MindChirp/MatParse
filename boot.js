@@ -181,3 +181,8 @@ ipcMain.handle("open-folder-selection", async (ev)=>{
     })
     return result.filePaths;
 })
+
+
+ipcMain.handle("open-folder-path", async (ev, dat)=>{
+    require('child_process').exec('start "" "' + dat, '"');
+})

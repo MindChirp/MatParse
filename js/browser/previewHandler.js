@@ -28,6 +28,10 @@ async function applyPreviewType(type) {
         2 - flat
     */
 
+    var letters = ["a", "b", "c"];
+
+    document.body.setAttribute("preview", letters[type]);
+
     //Get the elements
     var par = document.querySelector("#program-wrapper > div.explorer-wrapper > div.browser.frontpage > div.scroller > div.grid");
     var els = par.children;

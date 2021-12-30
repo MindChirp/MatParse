@@ -1,7 +1,16 @@
-const { fetchMaterialConfig } = require("../js/loadFiles/config");
-
+const { ipcRenderer } = require("electron");
+const { fetchMaterialConfig, fetch } = require("../js/loadFiles/config");
+const path = require("path");
+const { fstat } = require("fs");
+var materialPath;
+const fs = require("fs-extra");
+const { newNotification } = require("./notificationHandler");
 
 async function contextMenuHandler(e) {
+
+    if(!materialPath) {
+        materialPath = JSON.parse(await fetch()).filePath;
+    }
 
     var ctx = document.getElementById("context-menu");
 
@@ -81,8 +90,11 @@ async function materialCtx(el) {
 
     var conf = await fetchMaterialConfig(el.fileName);
     console.log(conf);
-
     var ratio = conf.aspectRatio || "No data";
+
+    var divide = conf.dimensions.x / conf.dimensions.y;
+
+    var backup = Math.round((1 * divide)) + ":" + 1;
 
     var wr = document.createElement("div");
     wr.className = "wrapper";
@@ -90,9 +102,24 @@ async function materialCtx(el) {
     var asp = document.createElement("div");
     asp.className = "emphasis";
 
+    var aspWr = document.createElement("div");
+    aspWr.className = "wrapper";
+    asp.appendChild(aspWr);
+
     var t = document.createElement("span");
     t.innerText = ratio;
-    asp.appendChild(t);
+    
+    
+    var t1 = document.createElement("span");
+    t1.innerText = backup;
+    t1.style = `
+        opacity: 0.5;
+        font-size: 0.8rem;
+        margin-left: 0.3rem;
+    `
+
+    aspWr.appendChild(t);
+    aspWr.appendChild(t1);
 
     wr.appendChild(asp);
 
@@ -106,12 +133,27 @@ async function materialCtx(el) {
     del.innerText = "Delete";
     bs.appendChild(del);
 
+    del.addEventListener("click", ()=>{
+        var str = path.join(materialPath, el.fileName);
+        try {
+            fs.rm(str, {recursive: true});
+        } catch (error) {
+            console.error(error);
+            newNotification("Could not delete material");
+        }
+
+        el.parentNode.removeChild(el);
+
+
+    })
+
     var folder = document.createElement("button");
     folder.innerText = "Open folder";
     bs.appendChild(folder);
 
     folder.addEventListener("click", ()=>{
-        open
+        var str = path.join(materialPath, el.fileName);
+        ipcRenderer.invoke("open-folder-path", str);
     })
 
     return wr;

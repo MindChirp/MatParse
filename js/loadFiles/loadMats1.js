@@ -301,8 +301,15 @@ function processArchiveFolder(folder) {
 
             try {
                 var dir = folder.withoutIndex || folder.original;
-                var previewFiles = await fs.readdir(path.join(materialPath, "temp", dir, "Previews"));
-                var url = await (await fs.readFile(path.join(materialPath, "temp", dir, "Previews", previewFiles[0]))).toString("base64");
+                try {
+                    var resolutions = await fetchMaterialResolutions(folder);
+                } catch (error) {
+                    console.error(error);
+                }
+                console.log(resolutions);
+                var res = await fs.readdir(path.join(materialPath, "temp", dir, resolutions[0] + "_" + dir));
+                console.log(res);
+                var url = await (await fs.readFile(path.join(materialPath, "temp", dir, resolutions[0] + "_" + dir, res[0]))).toString("base64");
             } catch (error) {
                 console.error(error);
             }
@@ -337,6 +344,7 @@ function processArchiveFolder(folder) {
                 resolutions: [],
                 createdStamp: undefined,
                 aspectRatio: asp,
+                dimensions: dims,
                 editedStamp: 0
             }
 
@@ -376,7 +384,7 @@ function fetchMaterialResolutions(folder) {
         try {
             var folders = await fs.readdir(path.join(materialPath, "unzips", folder.original, withoutExt, "REGULAR"));
         } catch (error) {
-            reject();
+            reject(error);
         }
 
         //Get the resolutions

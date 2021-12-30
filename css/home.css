@@ -694,6 +694,16 @@ body.small .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options
     transition: all 1000ms ease-in-out;
 }   
 
+body[preview="c"] .explorer-wrapper > .browser.frontpage.compressed > .scroller > .grid > .element img.preview-image{
+    min-width: 100%;
+    margin: auto;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    transition: none;
+}
+
+
 
 
 
@@ -797,6 +807,7 @@ body.small .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options
     max-width: calc(100% - 2rem);
     max-height: calc(100% - 0.4rem);
     overflow: hidden;
+    z-index: 10;
 }
 
 .explorer-wrapper > .browser.frontpage > .scroller > .grid > .element .resolutions span.res {
@@ -827,6 +838,20 @@ body:not(.small) .explorer-wrapper > .browser.frontpage > .scroller > .grid > .e
     opacity: 0;
 }
 
+body:not(.small) .explorer-wrapper > .browser.frontpage:not(.compressed) > .scroller > .grid > .element img.preview-image {
+    min-height: 100%;   
+}
+
+
+
+
+
+body .explorer-wrapper > .browser.frontpage.compressed > .scroller > .grid > .element img.preview-image{
+    transition: none;
+}
+
+
+
 
 body.small .explorer-wrapper > .browser.frontpage:not(.compressed) > .scroller > .grid > .element img.preview-image{
     height: 100%;
@@ -834,8 +859,13 @@ body.small .explorer-wrapper > .browser.frontpage:not(.compressed) > .scroller >
     margin: 0;
     float: left;
     display: inline-block;
-    transition: all 1000ms ease-in-out;
-    border-radius: 0 1rem 1rem 0;
+    transition: all 700ms ease-in-out;
+}
+
+body[preview="c"].small .explorer-wrapper > .browser.frontpage:not(.compressed) > .scroller > .grid > .element img.preview-image{
+    max-width: 5rem;
+    transform:scale(0.9);
+    border-radius: 0.5rem;
 }
 
 body.small .explorer-wrapper > .browser.frontpage:not(.compressed) > .scroller > .grid > .element:hover img.preview-image{
@@ -852,6 +882,8 @@ body.small .explorer-wrapper > .browser.frontpage > .scroller > .grid > .element
     display: inline-block;
     line-height: 5rem;
     margin-left: 1rem;
+    max-width: calc(100% - 6rem);
+    overflow-wrap: break-word;
 }
 
 
@@ -1033,12 +1065,25 @@ ctxmenu#context-menu .wrapper .emphasis {
     width: 100%;
     background: transparent;
     color: white;
-    padding: auto;
-    padding: 0 0.5rem;
+    padding: 0.2rem 0.5rem;
+    position: relative;
 }
 
+ctxmenu#context-menu .wrapper .emphasis .wrapper {
+    position: absolute;
+    top: 50%;
+    transform: translate(0,-50%);
+    box-sizing: border-box;
+    height: fit-content;
+    width: fit-content;
+}   
+
+
 ctxmenu#context-menu .wrapper .emphasis span {
-    line-height: 1.5rem;
+    height: fit-content;
+    vertical-align: bottom;
+    display: inline-block;
+
 }
 
 

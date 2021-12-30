@@ -83,6 +83,7 @@ function createMaterial(material) {
         el.appendChild(resCont);
 
         if(!noConfig) {
+            config.resolutions = config.resolutions || ["UNKNOWN"];
             var resolutions = config.resolutions;
             for(let i = 0; i < resolutions.length; i++) {
                 var res = document.createElement("span");
