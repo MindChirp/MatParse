@@ -56,6 +56,7 @@ async function bootWindow() {
     win.webContents.on("did-finish-load", async (ev)=>{
         //Loaded
         await win.webContents.send("program-state", JSON.stringify(res))
+        await win.webContents.send("app-path", appPath)
         win.show();
 
         autoUpdater.checkForUpdates();

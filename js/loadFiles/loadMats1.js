@@ -49,14 +49,16 @@ function loadMats() {
         try {
             var folders = await fs.readdir(materialPath);
         } catch (error) {
+            console.error(error);
             errors.push(1);
             reject(errors)
         }
 
         //Create /unzips folder
         try {
-            await fs.mkdir(path.join(materialPath, "unzips"));
+            await fs.mkdir(path.join(materialPath, "unzips"), {recursive:true});
         } catch (error) {
+            console.error(error);
             errors.push(1);
             reject(errors);
         }
@@ -65,7 +67,7 @@ function loadMats() {
 
 
         try {
-            await fs.mkdir(path.join(materialPath, "temp"));
+            await fs.mkdir(path.join(materialPath, "temp"), {recursive:true});
         } catch (error) {
             console.log(error);
             errors.push(1);

@@ -397,6 +397,166 @@ body.small .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options
 
 
 
+.explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options > .tags {
+    padding: 0.5rem;
+    box-sizing: border-box;
+}
+
+
+.explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options > .tags > div {
+    color: white;
+}
+
+.explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options > .tags > .current-tags {
+    display: block;
+    width: 100%;
+    height: fit-content;
+    margin-bottom: 1rem;
+    transition: all 200ms ease-in-out;
+    text-align: center;
+    animation: fade-in 200ms ease-in-out;
+}
+
+.explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options > .tags > .current-tags:empty {
+    display: none;
+    margin-bottom: 0;
+}
+
+.explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options > .tags > .current-tags > .tag {
+    background: white;
+    color:var(--a-background);
+    border-radius: 1.5rem;
+    width: fit-content;
+    padding: 0.2rem 0.5rem;
+    display: inline-block;
+    margin-right: 0.2rem;
+    margin-bottom: 0.2rem;
+    cursor: pointer;
+}
+
+
+
+@keyframes fade-in-current-tags {
+    0%{height: 0; opacity: 0;}
+    100%{height: 2rem; opacity: 1;}
+}
+
+
+.explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options > .tags > .created-tags {
+    height: fit-content;
+    text-align: center;
+}
+
+
+.explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options > .tags > .created-tags > button.create-tag {
+    background: white;
+    color:var(--a-background);
+    border-radius: 1rem;
+    width: fit-content;
+    border: none;
+    outline: none;
+    height: 1.5rem;
+    padding: 0 0.5rem;
+    cursor: pointer;
+    transition: all 150ms ease-in-out;
+    margin-top: 0.5rem;
+    float: left;
+}
+
+.explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options > .tags > .created-tags > button.create-tag:hover {
+    transform: translate(0,-0.1rem);
+    box-shadow: 0 -1px 2px rgba(0,0,0,0.12), 
+        0 2px 2px rgba(0,0,0,0.12), 
+        0 4px 4px rgba(0,0,0,0.12), 
+        0 8px 8px rgba(0,0,0,0.12),
+        0 16px 16px rgba(0,0,0,0.12);
+}
+
+.explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options > .tags > .created-tags > input.tag-name-input {
+    background: transparent;
+    outline: none;
+    border: solid;
+    border-color: white;
+    border-width: 0 0 2px 0;
+    color: white;
+    width: 5rem;
+    float: left;
+    animation: fade-in 150ms ease-in-out;
+    font-family: "proxima";
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+}
+
+
+
+.explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options > .tags > .created-tags > .tags {
+    height: fit-content;
+    width: 100%;
+    max-height: 20rem;
+    overflow-y: auto;
+    height: fit-content;
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+.explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options > .tags > .created-tags > .tags > .tag {
+    height: 1.4rem;
+    width: fit-content;
+    max-width: 10rem;
+    border-radius: 2rem;
+    color:white;
+    padding: 0.1rem 0.5rem 0.1rem 0.2rem;
+    line-height: 1rem;
+    display: inline-block;
+    margin-right: 0.2rem;
+    margin-bottom: 0.2rem;
+    vertical-align: top;
+    transition: all 150ms ease-in-out;
+    cursor: pointer;
+}
+
+.explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options > .tags > .created-tags > .tags > .tag:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+
+.explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options > .tags > .created-tags > .tags > .tag > span {
+    height: 100%;
+    line-height: 1.4rem;
+    margin-left: 0.2rem;
+}
+
+
+.explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options > .tags > .created-tags > .tags > .tag > svg {
+    vertical-align: top;
+    height: 1.4rem;
+    color:white;
+}
+
+
+
+
+
+
+
+.explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options > .tags > .created-tags > button.create-tag span {
+    line-height: 1.5rem;
+    display: inline-block;
+    vertical-align: top;
+    font-size: 0.9rem;
+}   
+
+
+.explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options > .tags > .created-tags > button.create-tag svg {
+    height: 1.5rem;
+    color:var(--a-background);
+}
+
+
+
+
+
+
 
 
 
@@ -656,6 +816,7 @@ body.small .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options
 
 /* .explorer-wrapper > .browser.frontpage > .scroller */::-webkit-scrollbar {
     width: 5px;
+    height: 2px;
     border-radius: 1rem;
     background: var(--a-background);
 }
@@ -757,6 +918,7 @@ body[preview="c"] .explorer-wrapper > .browser.frontpage.compressed > .scroller 
     border-radius: 1rem;
     background: white;
     opacity: 0;
+    z-index: 10;
 }
 
 .explorer-wrapper > .browser.frontpage > .scroller > .grid > .element:not(.selected)::before {
@@ -1054,6 +1216,12 @@ ctxmenu#context-menu {
     z-index: 1000;
     overflow: hidden;
 }
+
+ctxmenu#context-menu button:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
 
 ctxmenu#context-menu .wrapper {
     height: 100%;

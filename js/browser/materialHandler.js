@@ -4,6 +4,7 @@ const path = require("path");
 const { fetchMaterialConfig, fetch } = require("../loadFiles/config");
 const { dragMaterialOut } = require("../browser/dragMaterialHandler");
 const { newNotification } = require("../notificationHandler");
+const Tags = require("../../js/tagHandler");
 
 var materialPath;
 
@@ -93,14 +94,36 @@ function createMaterial(material) {
             }
         }
 
-        var selectFunction = function(){
+        var selectFunction = function(e){
+            if(!e.ctrlKey) {
+                //Deselect every other element    
 
-            this.classList.toggle("selected");
+                this.classList.toggle("selected");
+                //Check if it contains selected
+                var isSel = this.classList.contains("selected");
+
+                var sel = document.querySelector(".browser .grid").getElementsByClassName("material selected");
+                var len = sel.length;
+                console.log(sel);
+                for(let i = 0; i < len; i++) {
+                    sel[0].classList.remove("selected");
+                }
+
+                if(isSel) {
+                    this.classList.add("selected");
+                }
+
+            } else {
+                this.classList.toggle("selected");
+
+            }
+
+            updateTags();
         }
 
         el.select = selectFunction;
 
-        el.setAttribute("onclick", "this.select()");
+        el.setAttribute("onclick", "this.select(event)");
 
         //Set an image source
         //CHECKPOINT
@@ -117,6 +140,7 @@ function createMaterial(material) {
 
         //get the config
         var conf = JSON.parse(localStorage.getItem("preview")).type;
+        conf = conf || 0;
         var _img;
 
         var z = 0;
@@ -160,6 +184,25 @@ function containsObject(obj, list) {
     }
 
     return false;
+}
+
+
+async function updateTags() {
+    //get selected materials
+    var par = document.querySelector(".side-bar .options > .tags > .current-tags");
+    var sel = document.querySelector(".browser .grid").getElementsByClassName("material selected");
+
+    if(sel.length == 1) {
+       var tags = await Tags.loadTags(sel[0].fileName);
+        
+       //Add tags to the sidebar
+       Tags.appendTags(tags);
+    } else if(sel.length == 0) {
+        //Remove
+        par.innerHTML = "";
+    } else if(sel.length > 1) {
+        par.innerHTML = "";
+    }
 }
 
 module.exports = { createMaterial };

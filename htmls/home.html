@@ -72,8 +72,19 @@
                                         <label for="8K">8K</label>
                                     </form>
                                 </div>
-                                <span class="title">Tags</span>
 
+                                <span class="title">Tags</span>
+                                <div class="tags">
+                                    <div class="current-tags"></div>
+
+                                    <div class="created-tags">
+                                        <div class="tags">
+
+                                        </div>
+
+                                        <button onclick="addTag(event)" title="Create new tag" class="create-tag"><svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M256 112v288M400 256H112"/></svg><span>Add Tag</span></button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -112,7 +123,7 @@
                     </div>
 
 
-                    <div class="scroller">
+                    <div class="scroller cls-context-menu">
                         <div class="grid">
                         </div>
                     </div>

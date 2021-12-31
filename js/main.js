@@ -9,13 +9,13 @@ const { copyDraggedFiles } = require("../js/loadFiles/copyFilesOnDrop.js");
 const { showProgramInformation } = require("../js/programInfo.js");
 const path = require("path");
 const { contextMenuHandler, removeContextMenu } = require("../js/contextMenuHandler");
-
+const Tags = require("../js/tagHandler");
 const { searchMaterials } = require("../js/browser/searchHandler");
 //import { searchMaterials } from "./browser/searchHandler.mjs";
 
 var dropFileModal;
 
-document.body.onload = ()=>{
+document.body.onload = async ()=>{
     ipcRenderer.on("program-state", (ev, dat)=>{
         var data = JSON.parse(dat);
         if(data.new) {
@@ -23,6 +23,7 @@ document.body.onload = ()=>{
             setupProgram()
             .then(()=>{
                 startLoading();
+                
             })
         } else {
             startLoading();
@@ -37,7 +38,8 @@ document.body.onload = ()=>{
     //Register file dragging events
     registerFileDraggingEvents();
 
-    dropFileModal = document.querySelector("#drop-file-modal");
+    //Load tags into the sidebar
+    loadTags();
 }
 
 function startLoading() {
@@ -60,6 +62,58 @@ function startLoading() {
     })
 
 }
+
+async function loadTags() {
+    var par = document.querySelector(".side-bar .options .tags");
+
+    var createdTags = par.querySelector(".created-tags");
+
+    try {
+        var tags = await Tags.loadAllTags();
+    } catch (error) {
+        newNotification("Could not load tags");
+    }
+
+    console.log(tags)
+
+    for(let i = 0; i < tags.length; i++) {
+        var tag = document.createElement("div");
+        tag.className = "tag";
+        tag.innerHTML = /*'<svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path d="M435.25 48h-122.9a14.46 14.46 0 00-10.2 4.2L56.45 297.9a28.85 28.85 0 000 40.7l117 117a28.85 28.85 0 0040.7 0L459.75 210a14.46 14.46 0 004.2-10.2v-123a28.66 28.66 0 00-28.7-28.8z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path stroke="currentColor" fill="currentColor" d="M384 160a32 32 0 1132-32 32 32 0 01-32 32z"/></svg>*/'<span>' +tags[i]+ '</span>';
+
+        tag.setAttribute("onclick", "handleTagEvent(this)");
+
+        createdTags.querySelector(".tags").appendChild(tag);
+    }
+
+}
+
+
+
+async function handleTagEvent(el) {
+    var tag = el.getElementsByTagName("span")[0].innerText;
+
+    var sel = document.querySelector(".browser .grid").getElementsByClassName("material selected");
+    //Check selected elements
+
+    if(sel.length >= 1) {
+        //Add the tag to the selected elements
+        for(let i = 0; i < sel.length; i++) {
+            try {
+                var allTags = await Tags.addTag(sel[i].fileName, tag);
+                Tags.appendTags(allTags);
+                newNotification("Tag added");
+            } catch (error) {
+                console.error(error);
+                newNotification("Could not add " + tag + " tag");
+            }
+        }
+
+    } else {
+        //Search for the tag
+    }
+}
+
 
 
 window.addEventListener("resize", (e)=>{
@@ -90,6 +144,10 @@ function setMenuOptions() {
         console.log(error);
     }
     preview = preview || 0;
+
+    //Get menu preview options
+    var el = document.querySelector(".side-bar .options").getElementsByTagName("input")[preview];
+    changePreview(el);
 
     var par = document.querySelector("#program-wrapper > div.explorer-wrapper > div.side-bar.frontpage > div.options-wrapper > div > div > div > form");
 
@@ -320,4 +378,71 @@ async function addFilesFromButton() {
         newNotification("Could not parse files");
         console.error(err);
     })
+}
+
+ipcRenderer.on("app-path", (ev, dat)=>{
+    localStorage.setItem("app-path", dat);
+})
+
+
+
+function addTag(e) {
+    var inp = document.createElement("input");
+    inp.type = "text";
+    inp.className = "tag-name-input";
+
+    var el = e.currentTarget;
+
+    var b = el.cloneNode(true);
+
+    el.parentNode.replaceChild(inp, el);
+
+    inp.focus();
+
+
+
+
+    inp.addEventListener("change", async (e)=>{
+
+        var par = document.querySelector(".side-bar .options .tags");
+
+        var createdTags = par.querySelector(".created-tags");
+
+        var value = e.currentTarget.value;
+
+        e.currentTarget.value = "";
+
+        try {
+            await Tags.createTag(value);
+        } catch (error) {
+            console.error(error);
+            newNotification("Could not create tag");
+        }
+
+        try {
+           var tags = await Tags.loadAllTags();
+        } catch (error) {
+            console.error(error);
+            newNotification("Could not load tags");
+        }
+
+        createdTags.querySelector(".tags").innerHTML = "";
+
+        for(let i = 0; i < tags.length; i++) {
+            var tag = document.createElement("div");
+            tag.className = "tag";
+            tag.innerHTML = /*'<svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path d="M435.25 48h-122.9a14.46 14.46 0 00-10.2 4.2L56.45 297.9a28.85 28.85 0 000 40.7l117 117a28.85 28.85 0 0040.7 0L459.75 210a14.46 14.46 0 004.2-10.2v-123a28.66 28.66 0 00-28.7-28.8z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path stroke="currentColor" fill="currentColor" d="M384 160a32 32 0 1132-32 32 32 0 01-32 32z"/></svg>*/'<span>' +tags[i]+ '</span>';
+    
+            tag.setAttribute("onclick", "handleTagEvent(this)");
+            console.log(createdTags)
+            createdTags.querySelector(".tags").appendChild(tag);
+        }
+
+    })
+
+
+    inp.addEventListener("blur", ()=>{
+        inp.parentNode.replaceChild(b, inp);
+    })
+
 }

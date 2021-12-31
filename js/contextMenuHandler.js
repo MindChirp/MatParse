@@ -27,6 +27,10 @@ async function contextMenuHandler(e) {
         var content = await materialCtx(el.closest(".cls-context-menu"));
         ctx.innerHTML = "";
         ctx.appendChild(content);
+    } else if(el.closest(".cls-context-menu").classList.contains("scroller"))  {
+        var content = await scrollerCtx();
+        ctx.innerHTML = "";
+        ctx.appendChild(content);
     }
 
     ctx.style.display = "block";
@@ -73,8 +77,7 @@ async function contextMenuHandler(e) {
     }
 
     if(!pos.bottom) {
-        ctx.style.top = "auto";
-        ctx.style.bottom = (y - rect.height) + "px"
+        ctx.style.top = (y - rect.height) + "px"
     }
 
 
@@ -92,6 +95,9 @@ async function materialCtx(el) {
     console.log(conf);
     var ratio = conf.aspectRatio || "No data";
 
+
+
+    //FIX BUG RIGHT HERE! THIS BREAKS THE CONTEXT MENU WHEN SUPPORTED CONFIGS ARE ABSENT
     var divide = conf.dimensions.x / conf.dimensions.y;
 
     var backup = Math.round((1 * divide)) + ":" + 1;
@@ -154,6 +160,32 @@ async function materialCtx(el) {
     folder.addEventListener("click", ()=>{
         var str = path.join(materialPath, el.fileName);
         ipcRenderer.invoke("open-folder-path", str);
+    })
+
+    return wr;
+}
+
+
+function scrollerCtx() {
+    var wr = document.createElement("div");
+    wr.className = "wrapper";
+
+    var bs = document.createElement("div");
+    bs.className = "nominal";
+
+    wr.appendChild(bs);
+
+    var settings = document.createElement("button");
+    settings.innerText = "Settings";
+    bs.appendChild(settings);
+    settings.disabled = true;
+
+    var addF = document.createElement("button");
+    addF.innerText = "Add files";
+    bs.appendChild(addF);
+
+    addF.addEventListener("click", ()=>{
+        addFilesFromButton();
     })
 
     return wr;
