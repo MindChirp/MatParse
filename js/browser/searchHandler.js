@@ -15,8 +15,6 @@ async function searchMaterials(term, tags) {
     
     var grid = document.querySelector(".browser .grid");
 
-    var termSearch = [];
-
 
     if(searchOptions.term == false && searchOptions.tags == false) {
         //Show the whole list
@@ -26,27 +24,24 @@ async function searchMaterials(term, tags) {
 
         return;
     }
+    
+
+    if(searchOptions.term == true && searchOptions.tags == false) {
+        alert("asdasd")
+        var res = searchArr(mats, term);
+        loadMaterials(res);
+    }
 
 
-    if(searchOptions.term) {
-        const searcher = new fzsr(mats, {
+    function searchArr(arr, term) {
+        const searcher = new fzsr(arr, {
             caseSensitive: false
         })
 
+        
         var res = searcher.search(term);
-
-        if(res.length > 0) {    
-
-            if(!searchOptions.tags) {
-                //Clear the grid
-                grid.innerHTML = "";
-                loadMaterials(res);
-            } else {
-                termSearch = res;
-            }
-        } else {
-            newNotification("No materials found");
-        }
+        console.log(arr, term, res);
+        return res;
     }
 
 
@@ -80,21 +75,12 @@ async function searchMaterials(term, tags) {
 
         grid.innerHTML = "";
 
-        console.log(elementsWithTags)
-
         if(!searchOptions.term) {
             //Search only for the tags
             loadMaterials(elementsWithTags);
         } else {
-            var final = [];
-            //merge the two lists
-            termSearch.every((entry)=>{
-                if(elementsWithTags.includes(entry)) {
-                    final.push(entry);
-                }
-            });
-
-            loadMaterials(final);
+            var res = searchArr(elementsWithTags, term);
+            loadMaterials(res);
         }
 
     }
@@ -117,7 +103,7 @@ async function searchMaterials(term, tags) {
             }
         }   
 
-        console.log(materials);
+        grid.innerHTML = "";
         materials.forEach(element => {
             createMaterial(element);
         });

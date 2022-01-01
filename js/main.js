@@ -519,3 +519,14 @@ function addTag(e) {
     })
 
 }
+
+
+function searchForTerm(term) {
+    var tags = document.querySelector("#top-tools .search > .search-bar-wrapper").getElementsByClassName("tag");
+    var arr = [];
+    for(let i = 0; i < tags.length; i++) {
+        arr.push(tags[i].innerText.toLowerCase())
+    }
+
+    searchMaterials(term, arr);
+}
