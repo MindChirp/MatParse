@@ -431,10 +431,9 @@ body.small .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options
     display: inline-block;
     margin-right: 0.2rem;
     margin-bottom: 0.2rem;
+    text-transform: uppercase;
     cursor: pointer;
 }
-
-
 
 @keyframes fade-in-current-tags {
     0%{height: 0; opacity: 0;}
@@ -445,6 +444,8 @@ body.small .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options
 .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options > .tags > .created-tags {
     height: fit-content;
     text-align: center;
+    border-radius: 0.25rem;
+    padding: 0.2rem 0.2rem;
 }
 
 
@@ -506,13 +507,15 @@ body.small .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options
     border-radius: 2rem;
     color:white;
     padding: 0.1rem 0.5rem 0.1rem 0.2rem;
-    line-height: 1rem;
+    line-height: 1.6rem;
     display: inline-block;
     margin-right: 0.2rem;
     margin-bottom: 0.2rem;
     vertical-align: top;
     transition: all 150ms ease-in-out;
     cursor: pointer;
+    text-transform: uppercase;
+    font-size: 0.9rem;
 }
 
 .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options-selector > .options > .tags > .created-tags > .tags > .tag:hover {
@@ -647,6 +650,15 @@ body.small .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options
 }
 
 
+.explorer-wrapper > .browser.frontpage .browser-information {
+    color: white;
+    text-align: center;
+    width: 100%;
+    display: block;
+    animation: fade-in 200ms ease-in-out;
+}
+
+
 
 .explorer-wrapper > .browser.frontpage > .fp-title {
     color: white;
@@ -703,6 +715,7 @@ body.small .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options
     height: 1.5rem;
     transition: background 150ms ease-in-out;
     padding: 0.1rem;
+    white-space: nowrap;
 }
 
 .explorer-wrapper > .browser.frontpage > #top-tools div.search:hover {
@@ -724,11 +737,41 @@ body.small .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options
     cursor: pointer;
 }
 
+.explorer-wrapper > .browser.frontpage > #top-tools div.search div.search-bar-wrapper {
+    white-space: nowrap;
+    display: inline-block;
+    height: 100%;
+    width: fit-content;
+    display: inline-flex;
+    align-items: center;
+}       
+
+.explorer-wrapper > .browser.frontpage > #top-tools div.search div.search-bar-wrapper span.tag {
+    background: white;
+    border-radius: 0.25rem;
+    color:var(--c-background);
+    text-transform: uppercase;
+    display: inline-block;
+    margin-right: 0.2rem;
+    padding: 0.1rem 0.3rem;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: all 150ms ease-in-out;
+    
+}
+
+.explorer-wrapper > .browser.frontpage > #top-tools div.search div.search-bar-wrapper span.tag:hover {
+    opacity: 0.5;
+}   
+
+
+
+
 .explorer-wrapper > .browser.frontpage > #top-tools div.search input {
     background: transparent;
     height: 100%;
     transform: translate(0,-0.05rem);
-    width: 10rem;
+    width: fit-content;
     border: none;
     outline: none;
     color: white;

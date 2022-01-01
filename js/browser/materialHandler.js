@@ -104,7 +104,6 @@ function createMaterial(material) {
 
                 var sel = document.querySelector(".browser .grid").getElementsByClassName("material selected");
                 var len = sel.length;
-                console.log(sel);
                 for(let i = 0; i < len; i++) {
                     sel[0].classList.remove("selected");
                 }
@@ -149,7 +148,7 @@ function createMaterial(material) {
             try {
                 _img = await fs.readFile(path.join(materialPath, filePath, "Previews", filePath + paths[conf][z] + ".jpg"));
             } catch (error) {
-                console.log(error);
+                //console.log(error);
                 if(z < paths[conf].length-1) {
                     z++
                     await loop();

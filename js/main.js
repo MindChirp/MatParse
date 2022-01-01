@@ -48,7 +48,6 @@ function startLoading() {
         loadMats()
         .then(res=>{
             //Reload files
-            console.log(res);
             fetch()
             .then(async res=>{
                 await loadFiles(JSON.parse(res).filePath);
@@ -74,7 +73,6 @@ async function loadTags() {
         newNotification("Could not load tags");
     }
 
-    console.log(tags)
 
     for(let i = 0; i < tags.length; i++) {
         var tag = document.createElement("div");
@@ -111,9 +109,90 @@ async function handleTagEvent(el) {
 
     } else {
         //Search for the tag
+
+        //It is possible to search for multiple tags at the same time
+        //Get the tags that are searched for already
+        var tags = document.querySelector("#top-tools .search > .search-bar-wrapper").getElementsByClassName("tag");
+
+        if(tags.length >= 4) {
+            newNotification("Maximum 4 tags");
+            return;
+        }
+
+        var exists = false;
+        for(let i = 0; i < tags.length; i++) {
+            if(tags[i].innerText == tag) {exists=true; break;}
+        }
+
+        if(exists) return;
+
+        var dom = document.createElement("span");
+        dom.className = "tag";
+        dom.innerText = tag;
+        dom.setAttribute("title", "Click to remove");
+
+        dom.addEventListener("click", (e)=>{
+            var par = e.currentTarget.parentNode;
+            e.currentTarget.parentNode.removeChild(e.currentTarget);
+
+            var tags = par.getElementsByClassName("tag");
+
+            //initiate new search with the tags
+            var arr = [];
+            for(let i = 0; i < tags.length; i++) {
+                arr.push(tags[i].innerText.toLowerCase());
+            }
+
+            var term = par.querySelector("#search").value;
+
+            searchMaterials(term, arr);
+
+        })
+
+        var par = document.querySelector("#top-tools .search > .search-bar-wrapper")
+
+        par.insertBefore(dom, par.querySelector("#search"));
+
+
+        //Update the tags list
+        var tags = par.getElementsByClassName("tag");
+        var arr = [];
+        for(let i = 0; i < tags.length; i++) {
+            arr.push(tags[i].innerText.toLowerCase());
+        }
+        //get the search query
+        var term = par.querySelector("#search").value;
+
+        searchMaterials(term.toString(), arr);
+
     }
 }
 
+
+var search = document.getElementById("search");
+search.addEventListener("keydown", (e)=>{
+    if(e.currentTarget.value.length > 0) return;
+    var key =  e.keyCode
+    if(key == 8) {
+        //Check for the closest tag
+        var tag = search.previousElementSibling;
+        
+        if(tag) {
+            tag.parentNode.removeChild(tag)
+
+            var term = e.currentTarget.value;
+            var tags = e.currentTarget.parentNode.getElementsByClassName("tag");
+            var arr = [];
+
+            for(let i = 0; i < tags.length; i++) {
+                arr.push(tags[i].innerText.toLowerCase());
+            }
+
+
+            searchMaterials(term, arr);
+        }
+    }
+})
 
 
 window.addEventListener("resize", (e)=>{
@@ -163,7 +242,6 @@ function setMenuOptions() {
 
     res = res || ["2K"];
 
-    console.log(res);
 
     var els = document.querySelector("#program-wrapper > div.explorer-wrapper > div.side-bar.frontpage > div.options-wrapper > div > div > div.resolution").getElementsByTagName("input");
 
@@ -213,7 +291,6 @@ function dragOverHandler(e) {
 
 function dragEnterHandler(e) {
     e.preventDefault();
-    console.log(counter);
     counter++
     if(!dropFileModal.classList.contains("display")) {
         dropFileModal.classList.add("display");
@@ -247,7 +324,6 @@ function dropFileHandler(e) {
       loader.className = "file-loading-indication";
       loader.innerText = "Loading content";
       loader.remove = function() {
-          console.log(this);
           this.parentNode.removeChild(this);
       }
       par.appendChild(loader)
@@ -308,7 +384,6 @@ function updateBarPercentage(dat) {
 
 ipcRenderer.on("update-progress", function(ev, dat){
     var d = dat;
-    console.log(d);
     updateBarPercentage(JSON.parse(dat));
 })
 
@@ -358,7 +433,6 @@ async function addFilesFromButton() {
     loader.className = "file-loading-indication";
     loader.innerText = "Loading content";
     loader.remove = function() {
-        console.log(this);
         this.parentNode.removeChild(this);
     }
     par.appendChild(loader)
@@ -434,7 +508,6 @@ function addTag(e) {
             tag.innerHTML = /*'<svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path d="M435.25 48h-122.9a14.46 14.46 0 00-10.2 4.2L56.45 297.9a28.85 28.85 0 000 40.7l117 117a28.85 28.85 0 0040.7 0L459.75 210a14.46 14.46 0 004.2-10.2v-123a28.66 28.66 0 00-28.7-28.8z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path stroke="currentColor" fill="currentColor" d="M384 160a32 32 0 1132-32 32 32 0 01-32 32z"/></svg>*/'<span>' +tags[i]+ '</span>';
     
             tag.setAttribute("onclick", "handleTagEvent(this)");
-            console.log(createdTags)
             createdTags.querySelector(".tags").appendChild(tag);
         }
 

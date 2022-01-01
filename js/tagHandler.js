@@ -26,7 +26,7 @@ function addTag(material, tag) {
 
         config.tags = config.tags || [];
 
-        config.tags.push(tag);
+        config.tags.push(tag.toLowerCase());
 
         try {
             await fs.writeFile(configPath, JSON.stringify(config, null, 4))
@@ -85,10 +85,16 @@ function deleteTag(material, tag) {
                 reject(error);
             }
         }
-
         config.tags = config.tags || [];
 
-        var ind = config.tags.indexOf(tag);
+        var lowercase = [];
+        config.tags.forEach(element => {
+            lowercase.push(element.toLowerCase())
+        });
+
+        config.tags = lowercase;
+
+        var ind = config.tags.indexOf(tag.toLowerCase());
         if(ind != -1) {
             config.tags.splice(ind, 1);
         }
@@ -176,7 +182,6 @@ function appendTags(tags) {
         tag.addEventListener("click", async (e)=>{
             var sel = document.querySelector(".browser .grid").getElementsByClassName("material selected");
             //Get selected elements
-
             var allTags = await deleteTag(sel[0].fileName, e.currentTarget.getElementsByTagName("span")[0].innerText);
             appendTags(allTags);
         })
@@ -203,7 +208,7 @@ function createTag(tagName) {
 
         allTags == allTags || {tags:[]}
 
-        allTags.tags.push(tagName);
+        allTags.tags.push(tagName.toLowerCase());
 
         try {
             await fs.writeFile(configPath, JSON.stringify(allTags, null, 4));
