@@ -13,7 +13,7 @@ const Tags = require("../js/tagHandler");
 const { searchMaterials } = require("../js/browser/searchHandler");
 //import { searchMaterials } from "./browser/searchHandler.mjs";
 
-var dropFileModal;
+var dropFileModal = document.getElementById("drop-file-modal")
 
 document.body.onload = async ()=>{
     ipcRenderer.on("program-state", (ev, dat)=>{

@@ -27,7 +27,7 @@ async function searchMaterials(term, tags) {
     
 
     if(searchOptions.term == true && searchOptions.tags == false) {
-        alert("asdasd")
+        grid.innerHTML = "";
         var res = searchArr(mats, term);
         loadMaterials(res);
     }

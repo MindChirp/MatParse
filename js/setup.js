@@ -17,10 +17,7 @@ function setupProgram() {
 
         var menu = document.createElement("div");
         menu.className = "setup-modal";
-        var bg = document.createElement("div");
-        bg.className = "setup-modal-bg";
         
-        document.body.appendChild(bg);
         document.body.appendChild(menu);
 
         var title = document.createElement("h1");
@@ -30,6 +27,13 @@ function setupProgram() {
 
         var wr = document.createElement("div");
         wr.className = "filespaths";
+
+
+        var t = document.createElement("h1");
+        t.innerText = "1.";
+        t.className = "step-title";
+        wr.appendChild(t);
+
         var path = document.createElement("button");
         path.className = "files";
         path.innerText = "Select folder path"
@@ -42,7 +46,7 @@ function setupProgram() {
 
         path.addEventListener("click", async (e)=>{
             var filePath = await ipcRenderer.invoke("path-modal", "");
-            if(filePath.length == 0) return;        
+            if(filePath.length == 0) return;     
         
             out.innerText = filePath[0];
 
@@ -55,7 +59,10 @@ function setupProgram() {
         menu.appendChild(finish);
 
         finish.addEventListener("click", async (e)=>{
-            if(config.filePath.length == 0) return;
+            if(config.filePath.length == 0) {
+                setupNotification("Select an input folder");
+                return;
+            }
             
             //save the config
             try {
@@ -65,11 +72,22 @@ function setupProgram() {
                 alert("Could not complete setup. Try again.");
             }
             menu.parentNode.removeChild(menu);
-            bg.parentNode.removeChild(bg);
             resolve();
         })
     })
 
+}
+
+function setupNotification(cont) {
+    var el = document.createElement("span");
+    el.className = "setup-notification";
+    el.innerText = cont;
+
+    document.querySelector(".setup-modal").appendChild(el);
+
+    setTimeout(()=>{
+        el.parentNode.removeChild(el);
+    }, 5000)
 }
 
 module.exports = { setupProgram };

@@ -1,8 +1,7 @@
 .setup-modal {
-    height: 70%;
-    width: 80%;
+    height: 100%;
+    width: 100%;
     background: var(--a-background);
-    border: 2px solid var(--a-accent);
     position: absolute;
     top: 50%;
     left: 50%;
@@ -10,17 +9,6 @@
     border-radius: 0.5rem;
     padding: 1rem;
     box-sizing: border-box;
-}
-
-.setup-modal-bg {
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    background: var(--b-background);
-    opacity: 0.8;
-    top: 0;
-    left: 0;
-    border-radius: 0.5rem;
 }
 
 .setup-modal > h1 {
@@ -53,6 +41,19 @@
 .setup-modal > .filespaths .files-output {
     color: white;
     margin-left: 1rem;
+    background:var(--c-background);
+}
+
+.setup-modal > .filespaths .files-output:not(:empty) {
+    animation: fade-in 200ms ease-in-out 0.5s both;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.5rem;
+}
+
+
+.setup-modal h1.step-title {
+    color: white;
+    margin: 1rem 0 0.2rem 0;
 }
 
 .setup-modal > .finish {
@@ -65,8 +66,8 @@
     color: white;
     outline: none;
     border: none;
-    padding: 0.5rem 1rem;
-    font-size: 1.5rem;
+    padding: 0.3rem 1rem;
+    font-size: 1.2rem;
     font-family: "proxima";
     text-transform: uppercase;
     cursor: pointer;
@@ -78,3 +79,21 @@
 }
 
 
+.setup-modal > .setup-notification {
+    animation: setup-notification-slide-in 200ms ease-in-out;
+    position: absolute;
+    width: fit-content;
+    height: fit-content;
+    padding: 0.5rem 1rem;
+    background: var(--b-background);
+    bottom: 3.5rem;
+    left: 50%;
+    transform: translate(-50%);
+    color: white;
+    border-radius: 0.5rem;
+}
+
+@keyframes setup-notification-slide-in {
+    0% {transform: translate(-50%,100%); opacity: 0;}
+    100% {transform: translate(-50%,0); opacity: 1;}
+}

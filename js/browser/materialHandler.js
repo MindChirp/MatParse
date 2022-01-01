@@ -95,7 +95,8 @@ function createMaterial(material) {
         }
 
         var selectFunction = function(e){
-            if(!e.ctrlKey) {
+            console.log(e);
+            if(!e.ctrlKey && !e.shiftKey) {
                 //Deselect every other element    
 
                 this.classList.toggle("selected");
