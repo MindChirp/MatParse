@@ -888,6 +888,20 @@ body.small .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options
     column-gap: 0.5rem !important;
 }
 
+.explorer-wrapper > .browser.frontpage > .scroller > .grid > .element .no-image {
+    height: 100%;
+    position: relative;
+    width: 100%;
+}
+
+.explorer-wrapper > .browser.frontpage > .scroller > .grid > .element svg {
+    height: 100%;
+    width: auto;
+    transform: translate(-50%);
+    position: absolute;
+    left: 50%;
+}
+
 .explorer-wrapper > .browser.frontpage.compressed > .scroller > .grid > .element span.title{
     display: none;
 }
