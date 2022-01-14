@@ -77,16 +77,25 @@ ipcMain.handle("path-modal", async (ev, arg)=>{
     return result.filePaths;
 })
 
-ipcMain.handle("save-config", (ev, arg)=>{
+
+function applyConfig(config) {
+    if(win) {
+        win.setAlwaysOnTop(config.stayOnTop);
+    }
+}
+
+ipcMain.handle("save-config", async (ev, arg)=>{
     console.log(typeof JSON.parse(arg));
-    if(typeof JSON.parse(arg) != "object") return "Must be a object";
-    fs.writeFile(path.join(appPath, "userdata", "config.json"), JSON.stringify(arg))
-    .then(()=>{
+    if(typeof JSON.parse(arg) != "object") return "Must be an object";
+    
+    try {
+        await fs.writeFile(path.join(appPath, "userdata", "config.json"), JSON.stringify(arg))
+        applyConfig(JSON.parse(arg));
         return "OK";
-    })
-    .catch(err=>{
-        return err+'';
-    })
+    } catch (error) {
+        return error+'';
+    }
+    
 })
 
 ipcMain.handle("fetch-config", async (ev, arg)=>{

@@ -5,6 +5,7 @@ function setupProgram() {
 
         var config = {
             filePath: "",
+            stayOnTop: true
         }
 
         localConfig = {

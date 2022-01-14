@@ -1,0 +1,115 @@
+#settings-pane {
+    position: absolute;
+    
+    height: 100%;
+    width: 100%;
+    
+    background: var(--a-background);
+
+    top: 0;
+    left: 0;
+
+    border-radius: 0.5rem;
+
+    display: grid;
+    grid-template-columns: 4rem auto;
+    grid-template-rows: 100%;
+    overflow: hidden;
+
+    animation: fade-in 200ms ease-in-out;
+
+    z-index: 999;
+}
+
+#settings-pane > .side-bar {
+    width: 100%;
+    height: 100%;
+    background: var(--c-background);
+    position: relative;
+}
+
+#settings-pane > .side-bar .back {
+    position: absolute;
+    bottom: 0.75rem;
+    left: 0.75rem;
+    height: 2.5rem;
+    width: 2.5rem;
+    padding: 0;
+    border: 0;
+    outline: none;
+    color: white;
+    border-radius: 0.5rem;
+    background: var(--a-accent);
+    cursor: pointer;
+    transition: all 150ms ease-in-out;
+}
+
+#settings-pane > .side-bar .back:hover {
+    transform: translate(0,-0.1rem);
+    box-shadow: 0 -1px 2px rgba(0,0,0,0.12), 
+    0 2px 2px rgba(0,0,0,0.12), 
+    0 4px 4px rgba(0,0,0,0.12), 
+    0 8px 8px rgba(0,0,0,0.12),
+    0 16px 16px rgba(0,0,0,0.12);
+}
+
+
+#settings-pane > .side-bar .back svg {
+    transform: scale(0.6);
+}
+
+
+#settings-pane > .side-bar > div.wrapper {
+    display: grid;
+    height: fit-content;
+    width: 100%;
+    grid-auto-rows: 4rem;
+    grid-template-columns: 100%;
+    opacity: 1;
+}
+
+#settings-pane > .side-bar > div.wrapper:hover input[name="menu-page"] + label {
+    opacity: 1;
+}
+
+#settings-pane > .side-bar > div.wrapper input[name="menu-page"] {
+    display: none;
+}
+
+#settings-pane > .side-bar > div.wrapper > input[name="menu-page"] + label {
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    transition: all 150ms ease-in-out;
+    opacity: 0.5;
+}
+
+#settings-pane > .side-bar > div.wrapper > input[name="menu-page"]:checked + label {
+    opacity: 1;
+}
+
+
+
+#settings-pane > .side-bar > div.wrapper > input[name="menu-page"]:checked + label::before {
+    position: absolute;
+    left: 0.1rem;
+    border-radius: 1rem;
+    top: 0;
+    width: 2px;
+    height: 80%;
+    top: 50%;
+    transform: translate(0,-50%);
+    background: white;
+    content: ".";
+    color: transparent;
+}
+
+
+#settings-pane > .side-bar > div.wrapper > input[name="menu-page"] + label svg {
+    height: 50%;
+    margin-top: 50%;
+    transform: translate(0,-50%);
+    color: white;
+}

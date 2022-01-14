@@ -11,6 +11,7 @@ const path = require("path");
 const { contextMenuHandler, removeContextMenu } = require("../js/contextMenuHandler");
 const Tags = require("../js/tagHandler");
 const { searchMaterials } = require("../js/browser/searchHandler");
+const settings = require("../js/settings/settings");
 //import { searchMaterials } from "./browser/searchHandler.mjs";
 
 var dropFileModal = document.getElementById("drop-file-modal")
@@ -252,6 +253,17 @@ function setMenuOptions() {
             }
         }
     }
+
+    (async function(){
+        var conf = JSON.parse(await ipcRenderer.invoke("fetch-config", ""));
+        conf = JSON.parse(conf);
+        console.log(conf)
+        //Set pin mode
+        var pin = document.querySelector("#top-tools > div.right-side > div.stay-on-top-toggle > input");
+        pin.checked = conf.stayOnTop;
+        
+    })();
+
 }
 
 
@@ -529,4 +541,25 @@ function searchForTerm(term) {
     }
 
     searchMaterials(term, arr);
+}
+
+
+async function setPinnedToTop(state) {
+    if(typeof state != "boolean") return;
+
+    //fetch config
+    var config = await ipcRenderer.invoke("fetch-config", "");
+    config = JSON.parse(JSON.parse(config));
+    if(!config) {
+        newNotification("Could not change pin mode");
+        return;
+    }
+    config.stayOnTop = state;
+    //save config
+    try {
+        var res = await ipcRenderer.invoke("save-config", JSON.stringify(config));
+    } catch (error) {
+        console.error(error);
+    }
+    
 }

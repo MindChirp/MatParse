@@ -786,20 +786,32 @@ body.small .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options
     height: 100%;
 }
 
-.explorer-wrapper > .browser.frontpage > #top-tools > .right-side > div {
+.explorer-wrapper > .browser.frontpage > #top-tools > .right-side .divider {
+    height: 1.5rem;
+    width: 0.5px;
+    padding: 0;
+    color: white;
+    display: inline-block;
+    margin: 0 0.5rem;
+    background: white;
+    vertical-align:sub;
+    opacity: 0.5;
+}
+
+.explorer-wrapper > .browser.frontpage > #top-tools > .right-side > div:not(.divider) {
     display: inline-block;
 }
 
-.explorer-wrapper > .browser.frontpage > #top-tools > .right-side > div.compressed-toggle {
+.explorer-wrapper > .browser.frontpage > #top-tools > .right-side > div {
     padding: 0.1rem;
 
 }
 
-.explorer-wrapper > .browser.frontpage > #top-tools > .right-side > div.compressed-toggle input {
+.explorer-wrapper > .browser.frontpage > #top-tools > .right-side > div input {
     display: none;
 }
 
-.explorer-wrapper > .browser.frontpage > #top-tools > .right-side > div.compressed-toggle label {
+.explorer-wrapper > .browser.frontpage > #top-tools > .right-side > div label {
     color: white;
     cursor: pointer;
     transition: all 150ms ease-in-out;
@@ -812,23 +824,27 @@ body.small .explorer-wrapper > .side-bar.frontpage > .options-wrapper > .options
     text-transform: uppercase;
 }
 
-.explorer-wrapper > .browser.frontpage > #top-tools > .right-side > div.compressed-toggle label svg {
+.explorer-wrapper > .browser.frontpage > #top-tools > .right-side > div label svg {
     color: white;
     height: 100%;
     margin: auto;
 }   
 
 
-.explorer-wrapper > .browser.frontpage > #top-tools > .right-side > div.compressed-toggle label:hover {
+.explorer-wrapper > .browser.frontpage > #top-tools > .right-side > div label:hover {
     background:rgba(21, 21, 21,0.7);
 }
 
-.explorer-wrapper > .browser.frontpage > #top-tools > .right-side > div.compressed-toggle input:checked + label {
+.explorer-wrapper > .browser.frontpage > #top-tools > .right-side > div input:checked + label {
     background: white;
 }
 
-.explorer-wrapper > .browser.frontpage > #top-tools > .right-side > div.compressed-toggle input:checked + label svg {
+.explorer-wrapper > .browser.frontpage > #top-tools > .right-side > div input:checked + label svg {
     color:var(--a-background);
+}
+
+.explorer-wrapper > .browser.frontpage > #top-tools > .right-side > div.stay-on-top-toggle {
+    padding: 0.1rem;
 }
 
 .explorer-wrapper > .browser.frontpage > .scroller {
