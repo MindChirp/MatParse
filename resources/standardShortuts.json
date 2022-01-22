@@ -1,0 +1,8 @@
+{
+    "shortcuts":[
+        {"title":"Toggle pin mode", "desc": "Toggles the always on top feature", "combo": "Ctrl+P", "id":0},
+        {"title":"Open settings", "desc": "Open settings", "combo": "Ctrl+S", "id":1},
+        {"title":"Add files", "desc": "Add files", "combo": "Ctrl+F", "id":2},
+        {"title":"Toggle grid mode", "desc": "Toggles between grid and wide layout", "combo": "Ctrl+G", "id":3}
+    ]
+}

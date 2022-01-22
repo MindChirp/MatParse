@@ -1,5 +1,5 @@
 const { loadMats, loadFiles } = require("../js/loadFiles/loadMats1");
-const { ipcRenderer, electron, contextBridge } = require("electron");
+const { ipcRenderer, electron, contextBridge, globalShortcut } = require("electron");
 const { setupProgram } = require("../js/setup.js");
 const { fetch } = require("../js/loadFiles/config");
 const { changePreview } = require("../js/browser/previewHandler.js");
@@ -11,7 +11,8 @@ const path = require("path");
 const { contextMenuHandler, removeContextMenu } = require("../js/contextMenuHandler");
 const Tags = require("../js/tagHandler");
 const { searchMaterials } = require("../js/browser/searchHandler");
-const settings = require("../js/settings/settings");
+const settings = require("../js/settings/settings")
+const keybinds = require("../js/keybindHandler");
 //import { searchMaterials } from "./browser/searchHandler.mjs";
 
 var dropFileModal = document.getElementById("drop-file-modal")
@@ -41,7 +42,11 @@ document.body.onload = async ()=>{
 
     //Load tags into the sidebar
     loadTags();
+
+    //Load keyboard shortcuts
+    keybinds.activatebinds();
 }
+
 
 function startLoading() {
     return new Promise((resolve, reject)=>{
@@ -255,9 +260,7 @@ function setMenuOptions() {
     }
 
     (async function(){
-        var conf = JSON.parse(await ipcRenderer.invoke("fetch-config", ""));
-        conf = JSON.parse(conf);
-        console.log(conf)
+        var conf = JSON.parse(await fetch())
         //Set pin mode
         var pin = document.querySelector("#top-tools > div.right-side > div.stay-on-top-toggle > input");
         pin.checked = conf.stayOnTop;
@@ -543,6 +546,42 @@ function searchForTerm(term) {
     searchMaterials(term, arr);
 }
 
+async function togglePinMode() {
+    try {
+        var conf = JSON.parse(await fetch());
+    } catch (error) {
+        console.error(error);
+        newNotification("Could not toggle pin mode");
+        return;
+    }
+
+    var state = conf.stayOnTop;
+    state=state?false:true;
+
+    setPinnedToTop(state);
+
+    //Update pin symbol
+    document.querySelector("#stay-on-top").checked = state;
+
+}
+
+function toggleGridMode() {
+    //Get grid mode
+    var inps = document.querySelector("#top-tools > div.right-side > div.compressed-toggle");
+    inps = inps.getElementsByTagName("input");
+    if(inps[0].checked) {
+        inps[1].checked = true;
+        inps[0].checked = false;
+        handleGridType("wide");
+        
+    } else if(inps[1].checked) {
+        inps[0].checked = true;
+        inps[1].checked = false;
+        handleGridType("compressed");
+
+    }
+
+}
 
 async function setPinnedToTop(state) {
     if(typeof state != "boolean") return;
@@ -562,4 +601,14 @@ async function setPinnedToTop(state) {
         console.error(error);
     }
     
+}
+
+
+function loadKeyCuts() {
+    
+}
+
+
+function openSettings() {
+    settings.open();
 }
