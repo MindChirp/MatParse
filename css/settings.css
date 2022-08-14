@@ -158,14 +158,14 @@
 
 
 /*Keybind page*/
-#settings-pane > .content-wrapper > div > .keybinds {
+#settings-pane > .content-wrapper.keybinds > div > .keybinds {
     height: fit-content;
     width: 100%;
     padding: 1rem;
     box-sizing: border-box;
 }
 
-#settings-pane > .content-wrapper > div > .keybinds .keybind {
+#settings-pane > .content-wrapper.keybinds > div > .keybinds .keybind {
     color: white;
     width: 100%;
     display: flex;
@@ -173,16 +173,16 @@
     margin-bottom: 0.5rem;
 }
 
-#settings-pane > .content-wrapper > div > .keybinds .keybind > .name {
+#settings-pane > .content-wrapper.keybinds > div > .keybinds .keybind > .name {
     width: 30%;
     display: inline-block;
 }
 
-#settings-pane > .content-wrapper > div > .keybinds .keybind > .description {
+#settings-pane > .content-wrapper.keybinds > div > .keybinds .keybind > .description {
     display: none;
 }
 
-#settings-pane > .content-wrapper > div > .keybinds .keybind > .connector {
+#settings-pane > .content-wrapper.keybinds > div > .keybinds .keybind > .connector {
     width: 20%;
     background: white;
     height: 1px;
@@ -191,7 +191,7 @@
     margin: 0 1rem;
 }
 
-#settings-pane > .content-wrapper > div > .keybinds .keybind > .keys {
+#settings-pane > .content-wrapper.keybinds > div > .keybinds .keybind > .keys {
     background: white;
     color: var(--a-background);
     border-radius: 1rem;
@@ -202,7 +202,7 @@
     display: inline-block;
 }
 
-#settings-pane > .content-wrapper > div > .keybinds .keybind > .keys:hover::after {
+#settings-pane > .content-wrapper.keybinds > div > .keybinds .keybind > .keys:hover::after {
     content: "Edit";
     text-transform: uppercase;
     color: white;
@@ -215,7 +215,7 @@
     animation: fade-in 150ms ease-in-out;
 }   
 
-#settings-pane > .content-wrapper > div > .keybinds .keybind > .keys.flash {
+#settings-pane > .content-wrapper.keybinds > div > .keybinds .keybind > .keys.flash {
     animation: ease-in-out 1000ms flashing infinite;
 }
 
@@ -224,6 +224,84 @@
     50%{opacity:0.5}
     100%{opacity:1}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+#settings-pane > .content-wrapper.importing > div > .profiles {
+    padding: 0 1rem;
+}   
+
+#settings-pane > .content-wrapper.importing > div > .profiles > div.wrapper {
+    height: 4rem;
+    width: fit-content;
+    max-width: 80%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem 0 0;
+}   
+
+
+#settings-pane > .content-wrapper.importing > div > .profiles > div.wrapper div.profile {
+    height: 3rem;
+    width: 3rem;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    display: inline-block;
+    margin-right: 0.5rem;
+}   
+
+#settings-pane > .content-wrapper.importing > div > .profiles > div.wrapper div.profile:last-of-type {
+    margin-right: 1rem;
+}
+
+
+#settings-pane > .content-wrapper.importing > div > .profiles > div.wrapper div.profile img {
+    height: 100%;
+    width: auto;
+}   
+
+
+
+#settings-pane > .content-wrapper.importing > div > .profiles > div.wrapper button.create-profile {
+    height: 3rem;
+    width: 3rem;
+    background: var(--c-background);
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 200ms cubic-bezier(0.75, 0.09, 0.18, 1.99);
+}  
+
+#settings-pane > .content-wrapper.importing > div > .profiles > div.wrapper button.create-profile svg {
+    height: 100%;
+    width: auto;
+    color: white;
+}
+
+#settings-pane > .content-wrapper.importing > div > .profiles > div.wrapper button.create-profile:hover {
+    transform: scale(1.05);
+    box-shadow: 0 -1px 2px rgba(0,0,0,0.12), 
+    0 2px 2px rgba(0,0,0,0.12), 
+    0 4px 4px rgba(0,0,0,0.12), 
+    0 8px 8px rgba(0,0,0,0.12),
+    0 16px 16px rgba(0,0,0,0.12);
+}
+
+
 
 
 

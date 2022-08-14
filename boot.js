@@ -109,6 +109,12 @@ ipcMain.handle("fetch-config", async (ev, arg)=>{
 
 })
 
+
+
+ipcMain.handle("get-app-path", async (ev, arg)=>{
+    return appPath;
+})
+
 ipcMain.handle("close-program", (ev, arg)=>{
     if(devToolsWin) {
         devToolsWin.close();
@@ -127,9 +133,36 @@ ipcMain.handle("minimize-program", (ev, arg)=>{
 
 
 app.on("ready", ()=>{
+    checkFiles();
     bootWindow();
 })
 
+
+
+
+
+//Check if all nescessary files are present
+function checkFiles() {
+    //Read appdata dir
+    fs.readdir(appPath, async (err, dat)=>{
+        if(err) {
+            console.log("COULD NOT VERIFY PROGRAM FILES");
+            console.error(err);
+        }
+
+
+        console.log(dat);
+        if(!dat.includes("importprofiles")) {
+            //Copy over the includes profile file
+            try {
+                await fs.copy("./importprofiles", path.join(appPath, "importprofiles"));
+            } catch (error) {
+                console.error(error);
+                console.log("COULD NOT COPY NESCESSARY FILES");
+            }
+        }
+    })
+}
 
 
 //Handle auto updating

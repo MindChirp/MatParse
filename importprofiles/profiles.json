@@ -1,0 +1,11 @@
+{
+    "profiles": [
+        {
+            "name": "Poliigon default",
+            "uuid": "8f2f1637-890c-45f1-a5e6-cf55d081589f",
+            "icon": "poliigon logo.png",
+            "filters": "*",
+            "preview": "Sphere, preview"
+        }
+    ]
+}

@@ -1,7 +1,10 @@
-const { fs, ensureLink } = require("fs-extra");
+const fs = require("fs-extra");
 const { fetch } = require("../loadFiles/config");
 const { handleShortCut } = require("../keybindHandler");
 const { ipcRenderer } = require("electron");
+const path = require("path");
+const { showProgramInformation } = require("../programInfo");
+const { newBannerNotification, newNotification } = require("../notificationHandler");
 
 async function open() {
     //Get settings pane if there is one
@@ -104,7 +107,8 @@ var bindEditDat;
 
 async function Shortcuts() {
     var wr = cleanPane();
-    
+    wr.classList.add("keybinds");
+
     var cont = document.createElement("div");
     cont.className = "inner";
     var t = document.createElement("h1");
@@ -267,7 +271,8 @@ function enablebinds() {
 
 function Importing() {
     var wr = cleanPane();
-    
+    wr.classList.add("importing");
+
     var cont = document.createElement("div");
     cont.className = "inner";
     var t = document.createElement("h1");
@@ -278,13 +283,34 @@ function Importing() {
 
     wr.appendChild(cont);
 
+
+    var profiles = document.createElement("div");
+    profiles.className = "profiles";
+    cont.appendChild(profiles);
+
     var p = document.createElement("p");
-    p.innerText = "Importing settings are not available";
-    cont.appendChild(p)
+    p.innerText = "Importing profiles";
+    profiles.appendChild(p)
     p.style = `
         color: white;
-        opacity: 0.5;
+        opacity: 1;
     `
+
+
+    var wrapper = document.createElement("div");
+    wrapper.className = "wrapper";
+    
+    var create = document.createElement("button");
+    create.className = "create-profile";
+    create.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><title>Add</title><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M256 112v288M400 256H112"/></svg>';
+    wrapper.appendChild(create);
+    profiles.appendChild(wrapper);
+
+    create.onclick = createProfile;
+
+
+    //Load all profiles
+    loadImportingProfiles();
 }
 
 function Placeholder0() {
@@ -297,6 +323,69 @@ function Placeholder1(){
 
 }
 
+
+
+async function createProfile() {
+    //Create a modal
+    var modal = document.createElement("div");
+    modal.className = "profile-modal";
+    document.body.appendChild(modal);
+
+    //Create a foreground and a background
+    
+}
+
+
+async function loadImportingProfiles() {
+    //Read the profiles config file
+    try {
+        var appPath = await ipcRenderer.invoke("get-app-path", "");
+    } catch (error) {
+        console.error(error);
+        newNotification("Could not fetch profiles");
+        return;
+    }
+
+    //Get the config
+    try {
+        var config = JSON.parse(await fs.readFile(path.join(appPath, "importprofiles", "profiles.json"), "utf8"));
+    } catch (error) {
+        console.error(error);
+        newBannerNotification("Could not fetch profiles")
+        return;
+    }
+
+
+    var parent = document.querySelector("#settings-pane > div.content-wrapper.keybinds.importing > div > div.profiles > div.wrapper");
+
+    for(let x of config.profiles) {
+        var el = document.createElement("div");
+        el.className = "profile";
+        el.uuid = x.uuid;
+        parent.appendChild(el);
+        el.title = x.name;
+        
+        //Read the image
+        var image = new Image();
+        fs.readFile(path.join(appPath, "importprofiles", x.icon), (err, dat) => {
+            var base64 = dat.toString("base64");
+            image.src = "data:image/" + path.extname(x.icon) + ";base64," + base64;
+        })
+
+        var img = document.createElement("img");
+        el.appendChild(img);
+
+
+        image.onload = ()=>{
+            img.src = image.src;
+        }
+
+        parent.prepend(el);
+
+        
+    }
+
+}
 
 
 

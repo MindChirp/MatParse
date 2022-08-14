@@ -13,6 +13,7 @@ const Tags = require("../js/tagHandler");
 const { searchMaterials } = require("../js/browser/searchHandler");
 const settings = require("../js/settings/settings")
 const keybinds = require("../js/keybindHandler");
+const fs = require("fs-extra");
 //import { searchMaterials } from "./browser/searchHandler.mjs";
 
 var dropFileModal = document.getElementById("drop-file-modal")
@@ -311,6 +312,68 @@ function dragEnterHandler(e) {
         dropFileModal.classList.add("display");
         document.addEventListener("dragleave", dragLeaveHandler);       
 
+        //Load the profiles
+        loadProfilesToFileDropModal();
+    }
+}
+
+
+
+async function loadProfilesToFileDropModal() {
+    //Read the profiles config file
+    try {
+        var appPath = await ipcRenderer.invoke("get-app-path", "");
+    } catch (error) {
+        console.error(error);
+        newNotification("Could not fetch profiles");
+        return;
+    }
+
+    //Get the config
+    try {
+        var config = JSON.parse(await fs.readFile(path.join(appPath, "importprofiles", "profiles.json"), "utf8"));
+    } catch (error) {
+        console.error(error);
+        newBannerNotification("Could not fetch profiles")
+        return;
+    }
+
+
+    var parent = document.querySelector("#drop-file-modal > div.bottom > div.importing-profiles");
+    //fetch all uuids from parent
+    var preLoadedProfiles = parent.children;
+    var uuids = [];
+    for(let x of preLoadedProfiles) {
+        uuids.push(x.uuid);
+    }
+
+    for(let x of config.profiles) {
+        if(uuids.includes(x.uuid)) continue; //Skip this profile if it already has been loaded
+        var el = document.createElement("div");
+        el.className = "profile";
+        el.uuid = x.uuid;
+        
+        parent.appendChild(el);
+        el.title = x.name;
+        
+        //Read the image
+        var image = new Image();
+        fs.readFile(path.join(appPath, "importprofiles", x.icon), (err, dat) => {
+            var base64 = dat.toString("base64");
+            image.src = "data:image/" + path.extname(x.icon) + ";base64," + base64;
+        })
+
+        var img = document.createElement("img");
+        el.appendChild(img);
+
+
+        image.onload = ()=>{
+            img.src = image.src;
+        }
+
+        parent.appendChild(el);
+
+        
     }
 }
 
@@ -333,6 +396,20 @@ function dropFileHandler(e) {
       }
 
       if(copyFiles.length == 0) {newNotification("No archives found"); return;}
+
+      //Check what profile has been selected
+      var target = e.target;
+      if(target.closest.classList.contains("importing-profiles")) {
+          //The folder has been dropped over a profile
+
+          //Get the uuid of the profile
+
+      } else {
+          //The folder has not been dropped over a profile
+
+      }
+
+
 
       var par = document.querySelector("#program-wrapper > div.explorer-wrapper > div.browser.frontpage > div.scroller");
       var loader = document.createElement("span");
